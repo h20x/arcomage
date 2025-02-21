@@ -1,0 +1,10 @@
+.pile {
+  display: grid;
+  grid-template-columns: repeat(4, var(--card-width));
+  gap: 2rem;
+}
+
+.pile__placeholder {
+  width: var(--card-width);
+  height: var(--card-height);
+}

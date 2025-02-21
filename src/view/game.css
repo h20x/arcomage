@@ -1,0 +1,114 @@
+.game {
+  --rh: 0;
+  --rs: 74%;
+  --rl: 80%;
+
+  --gh: 120;
+  --gs: 75%;
+  --gl: 80%;
+
+  --bh: 240;
+  --bs: 70%;
+  --bl: 88%;
+
+  --card-width: calc(21.4rem);
+  --card-height: calc(4 / 3 * calc(var(--card-width)));
+
+  width: var(--game-width);
+  height: var(--game-height);
+  padding: 0 2rem;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.game__top {
+  height: 68%;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 2rem;
+  flex-shrink: 0;
+}
+
+.game__bottom {
+  flex-grow: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game__side {
+  display: flex;
+}
+
+.game__resources {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game__resources-wrapper {
+  box-shadow: 0.1rem 0.1rem 0.5rem #000;
+}
+
+.game__resource:first-child {
+  border-radius: 0.2rem 0.2rem 0 0;
+}
+
+.game__resource:last-child {
+  border-radius: 0 0 0.2rem 0.2rem;
+}
+
+.game__buildings {
+  display: flex;
+  align-self: end;
+  align-items: end;
+}
+
+.game__tower {
+  margin: 0 3rem;
+}
+
+.game__table {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.game__deck {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.65;
+}
+
+.game__field {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+}
+
+.game__discard-msg {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 68%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1;
+  color: #e7c500;
+  text-transform: uppercase;
+  text-shadow: -0.2rem 0 0.1rem #000, 0.2rem 0 0.1rem #000,
+    0 -0.2rem 0.1rem #000, 0 0.2rem 0.1rem #000;
+}
+
+.game--discard-mode .game__discard-msg {
+  display: block;
+}

@@ -1,0 +1,43 @@
+.tower {
+  --body-width: 45;
+  --body-height: 200;
+  --spire-width: 68;
+  --spire-height: 94;
+
+  width: 13.6rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.tower__spire {
+  width: 100%;
+  aspect-ratio: var(--spire-width) / var(--spire-height);
+  background-image: url(../../assets/spire-p.webp);
+  background-size: cover;
+  flex-shrink: 0;
+}
+
+.tower[enemy] .tower__spire {
+  background-image: url(../../assets/spire-e.webp);
+}
+
+.tower__body {
+  width: calc(var(--body-width) / var(--spire-width) * 100%);
+  aspect-ratio: var(--body-width) / calc(var(--body-height) * var(--fr));
+  background-image: url(../../assets/tower.webp);
+  background-size: cover;
+  align-self: center;
+}
+
+.tower__base {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.4rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #eee;
+  background: #000;
+  border: 0.2rem solid #ddd;
+  border-radius: 0.2rem;
+}

@@ -1,0 +1,145 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #000;
+  background: hsl(var(--h), var(--s), calc(var(--l) * 0.92))
+    url('../../assets/noise.webp');
+  box-shadow: 0.1rem 0.1rem 0.5rem #000;
+  border: 0.2rem solid hsl(var(--h), var(--s), calc(var(--l) * 0.15));
+}
+
+.card:hover {
+  outline: 0.2rem solid #eee;
+}
+
+.card--brick {
+  --h: var(--rh);
+  --s: var(--rs);
+  --l: var(--rl);
+}
+
+.card--recruit {
+  --h: var(--gh);
+  --s: var(--gs);
+  --l: var(--gl);
+}
+
+.card--gem {
+  --h: var(--bh);
+  --s: var(--bs);
+  --l: var(--bl);
+}
+
+.card--played,
+.card--discarded,
+.card--animated,
+.card--unknown {
+  pointer-events: none;
+}
+
+.card--animated {
+  z-index: 1;
+}
+
+.card--disabled {
+  cursor: default;
+}
+
+.card--disabled:hover {
+  outline-color: #d00;
+}
+
+.card--unknown {
+  background: url(../../assets/card-back.webp);
+  background-size: cover;
+  border: none;
+}
+
+.card--played,
+.card--discarded {
+  opacity: 0.75;
+}
+
+:is(.card--disabled, .card--played, .card--discarded)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.card__name {
+  text-align: center;
+  font-size: 1.8rem;
+  line-height: 1;
+  font-weight: 700;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 0.1rem 0.3rem #000;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: hsl(var(--h), var(--s), var(--l));
+}
+
+.card__img {
+  aspect-ratio: 108 / 64;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
+  background-size: cover;
+  border: 1px inset;
+  margin-bottom: 0.5rem;
+}
+
+.card--discarded .card__img::after {
+  position: relative;
+  z-index: 1;
+  content: 'Discarded';
+  color: #f00;
+  font-weight: 700;
+  font-size: 2.6rem;
+  text-transform: uppercase;
+  text-shadow: -0.2rem 0 0.1rem #000, 0.2rem 0 0.1rem #000,
+    0 -0.2rem 0.1rem #000, 0 0.2rem 0.1rem #000;
+}
+
+.card__desc {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  white-space: pre-line;
+  padding: 0 1rem;
+}
+
+.card__cost {
+  position: absolute;
+  bottom: 0.3rem;
+  right: 0.3rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  width: 3rem;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 -0.3rem 0.7rem hsl(var(--h), var(--s), calc(var(--l) * 0.3)) inset;
+  background: rgba(238, 238, 238, 0.9);
+}

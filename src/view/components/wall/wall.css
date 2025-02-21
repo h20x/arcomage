@@ -1,0 +1,30 @@
+.wall {
+  --body-width: 22;
+  --body-height: 200;
+  --base-width: 45;
+
+  width: 9rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.wall__body {
+  width: calc(var(--body-width) / var(--base-width) * 100%);
+  aspect-ratio: var(--body-width) / calc(var(--body-height) * var(--fr));
+  background: url(../../assets/wall.webp);
+  background-size: cover;
+  align-self: center;
+}
+
+.wall__base {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.4rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #eee;
+  background: #000;
+  border: 0.2rem solid #ddd;
+  border-radius: 0.2rem;
+}

@@ -1,0 +1,77 @@
+.resource {
+  width: 17rem;
+  display: block;
+  padding: 0.5rem;
+  line-height: 1;
+  color: #000;
+  box-shadow: -0.1rem -0.2rem 0.2rem rgb(0, 0, 0, 0.5) inset,
+    0.1rem 0.1rem 0.2rem rgb(255, 255, 255, 0.5) inset;
+  background: hsl(var(--h), var(--s), calc(var(--l) * 0.92));
+}
+
+.resource[type='brick'] {
+  --h: var(--rh);
+  --s: var(--rs);
+  --l: var(--rl);
+}
+
+.resource[type='recruit'] {
+  --h: var(--gh);
+  --s: var(--gs);
+  --l: var(--gl);
+}
+
+.resource[type='gem'] {
+  --h: var(--bh);
+  --s: var(--bs);
+  --l: var(--bl);
+}
+
+.resource__img {
+  position: relative;
+  aspect-ratio: 89 / 64;
+  margin-bottom: 0.5rem;
+  background-size: cover;
+  border: 1px inset;
+}
+
+.resource[type='brick'] .resource__img {
+  background-image: url(../../assets/brick.webp);
+}
+
+.resource[type='gem'] .resource__img {
+  background-image: url(../../assets/gem.webp);
+}
+
+.resource[type='recruit'] .resource__img {
+  background-image: url(../../assets/recruit.webp);
+}
+
+.resource__prod,
+.resource__amount {
+  font-family: 'Goblin One', serif;
+  font-style: normal;
+}
+
+.resource__prod {
+  position: absolute;
+  bottom: 0;
+  left: 0.5rem;
+  font-size: 3.2rem;
+  color: #e7c500;
+}
+
+.resource__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.2rem;
+}
+
+.resource__amount {
+  font-size: 2.2rem;
+}
+
+.resource__name {
+  font-size: 2rem;
+  font-weight: 700;
+}

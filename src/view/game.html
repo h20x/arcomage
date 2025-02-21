@@ -1,0 +1,60 @@
+<div class="game__top">
+  <div class="game__side">
+    <div class="game__resources">
+      <div class="game__resources-wrapper">
+        <am-resource
+          type="brick"
+          class="game__resource player-bricks"
+        ></am-resource>
+        <am-resource
+          type="gem"
+          class="game__resource player-gems"
+        ></am-resource>
+        <am-resource
+          type="recruit"
+          class="game__resource player-recruits"
+        ></am-resource>
+      </div>
+    </div>
+
+    <div class="game__buildings">
+      <am-tower class="game__tower player-tower"></am-tower>
+      <am-wall class="game__wall player-wall"></am-wall>
+    </div>
+  </div>
+
+  <div class="game__side">
+    <div class="game__buildings">
+      <am-wall class="game__wall enemy-wall"></am-wall>
+      <am-tower class="game__tower enemy-tower" enemy></am-tower>
+    </div>
+
+    <div class="game__resources">
+      <div class="game__resources-wrapper">
+        <am-resource
+          type="brick"
+          class="game__resource enemy-bricks"
+        ></am-resource>
+        <am-resource type="gem" class="game__resource enemy-gems"></am-resource>
+        <am-resource
+          type="recruit"
+          class="game__resource enemy-recruits"
+        ></am-resource>
+      </div>
+    </div>
+  </div>
+
+  <div class="game__table">
+    <am-deck class="game__deck"></am-deck>
+    <am-pile class="game__pile"></am-pile>
+  </div>
+
+  <am-field class="game__field"></am-field>
+</div>
+
+<div class="game__bottom">
+  <am-hand class="game__hand player-hand"></am-hand>
+  <am-hand class="game__hand enemy-hand"></am-hand>
+</div>
+
+<div class="game__discard-msg">Discard a card</div>

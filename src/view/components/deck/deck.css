@@ -1,0 +1,16 @@
+.deck {
+  display: block;
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: 0.2rem;
+  background-image: url(../../assets/card-back.webp);
+  background-size: cover;
+  box-shadow: 0.1rem 0.1rem 0.5rem #000;
+}
+
+.deck > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

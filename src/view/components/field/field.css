@@ -1,0 +1,6 @@
+.field {
+  display: block;
+  width: var(--card-width);
+  height: var(--card-height);
+  pointer-events: none;
+}
