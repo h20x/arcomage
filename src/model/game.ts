@@ -1,0 +1,222 @@
+import { Card, CardData } from './card';
+import { CARDS } from './cards';
+import { Deck } from './deck';
+import { Player, PlayerData, PlayerParams } from './player';
+import { VictoryChecker, VictoryConditions } from './victory-checker';
+
+export type UsedCard = {
+  cardIndex: number;
+  playerIndex: number;
+  data: CardData;
+  isDiscarded: boolean;
+};
+
+export type NewCard = {
+  cardIndex: number;
+  playerIndex: number;
+  data: CardData | null;
+};
+
+export type ParamPair = [Partial<PlayerParams>, Partial<PlayerParams>];
+
+export type GameChanges = {
+  usedCard: UsedCard;
+  params: ParamPair;
+  newCard?: NewCard;
+  nextRound?: {
+    params: ParamPair;
+    newCard?: NewCard;
+  };
+};
+
+export type GameData = {
+  players: [PlayerData, PlayerData];
+  victoryConditions: VictoryConditions;
+};
+
+export class GameModel {
+  static create(
+    player1: { params?: Partial<PlayerParams>; cards?: Card[] },
+    player2: { params?: Partial<PlayerParams>; cards?: Card[] },
+    victoryConditions: VictoryConditions,
+    handSize: number = 6
+  ): GameModel {
+    const deck = new Deck(CARDS);
+    const victoryChecker = new VictoryChecker(victoryConditions);
+    const _player1 = new Player(
+      {
+        ...player1.params,
+        isActive: true,
+        isWinner: false,
+        isDiscardMode: false,
+      },
+      player1.cards ?? deck.getRandomCards(handSize)
+    );
+    const _player2 = new Player(
+      {
+        ...player2.params,
+        isActive: false,
+        isWinner: false,
+        isDiscardMode: false,
+      },
+      player2.cards ?? deck.getRandomCards(handSize)
+    );
+
+    return new GameModel(_player1, _player2, deck, victoryChecker);
+  }
+
+  private players: [Player, Player];
+
+  private deck: Deck;
+
+  private victoryChecker: VictoryChecker;
+
+  private lastUsedCardIndex: number | null = null;
+
+  constructor(
+    player1: Player,
+    player2: Player,
+    deck: Deck,
+    victoryChecker: VictoryChecker
+  ) {
+    this.players = [player1, player2];
+    this.deck = deck;
+    this.victoryChecker = victoryChecker;
+    this.produceResources();
+  }
+
+  private get player(): Player {
+    return this.players.find((p) => p.isActive)!;
+  }
+
+  private get enemy(): Player {
+    return this.players.find((p) => !p.isActive)!;
+  }
+
+  useCard(cardIndex: number, isDiscarded: boolean = false): GameChanges {
+    if (this.hasWinner()) {
+      throw new Error('The game is ended');
+    }
+
+    const { player, enemy } = this;
+
+    if (!player.hasCard(cardIndex)) {
+      throw new Error(`Card with index ${cardIndex} doesn't exist`);
+    }
+
+    const card = player.getCard(cardIndex);
+    const isDiscardedCard = player.isDiscardMode || isDiscarded;
+
+    if (isDiscardedCard && card.isUndiscardable) {
+      throw new Error("This card can't be discarded");
+    }
+
+    const player1Copy = this.players[0].clone();
+    const player2Copy = this.players[1].clone();
+
+    if (isDiscardedCard) {
+      if (!player.isDiscardMode) {
+        player.isActive = false;
+        enemy.isActive = true;
+      }
+
+      player.isDiscardMode = false;
+    } else {
+      if (!card.apply(player, enemy)) {
+        throw new Error(`You can't use "${card.name}"`);
+      }
+
+      this.checkWinner();
+    }
+
+    const playerIndex = this.players.indexOf(player);
+    const enemyIndex = this.players.indexOf(enemy);
+    const changes = {} as GameChanges;
+
+    changes.usedCard = {
+      cardIndex,
+      playerIndex,
+      data: card.getData(),
+      isDiscarded: isDiscardedCard,
+    };
+
+    changes.params = [
+      Player.diff(player1Copy, this.players[0]),
+      Player.diff(player2Copy, this.players[1]),
+    ];
+
+    const { lastUsedCardIndex } = this;
+
+    if (player.isActive) {
+      const [newCard] = this.deck.getRandomCards(1);
+      player.setCard(cardIndex, newCard);
+
+      changes.newCard = {
+        cardIndex,
+        playerIndex,
+        data: newCard.getData(),
+      };
+    } else {
+      this.lastUsedCardIndex = cardIndex;
+    }
+
+    if (enemy.isActive && !this.hasWinner()) {
+      const player1Copy = this.players[0].clone();
+      const player2Copy = this.players[1].clone();
+      this.produceResources();
+      this.checkWinner();
+
+      changes.nextRound = {
+        params: [
+          Player.diff(player1Copy, this.players[0]),
+          Player.diff(player2Copy, this.players[1]),
+        ],
+      };
+
+      if (lastUsedCardIndex != null) {
+        const [newCard] = this.deck.getRandomCards(1);
+        enemy.setCard(lastUsedCardIndex, newCard);
+
+        changes.nextRound.newCard = {
+          cardIndex: lastUsedCardIndex,
+          playerIndex: enemyIndex,
+          data: newCard.getData(),
+        };
+      }
+    }
+
+    return changes;
+  }
+
+  getData(): GameData {
+    return {
+      players: [this.players[0].getData(), this.players[1].getData()],
+      victoryConditions: this.victoryChecker.getVictoryConditions(),
+    };
+  }
+
+  getActivePlayerIndex(): number {
+    return this.players.findIndex((p) => p.isActive);
+  }
+
+  isGameEnded(): boolean {
+    return this.players[0].isWinner || this.players[1].isWinner;
+  }
+
+  private hasWinner(): boolean {
+    return this.players[0].isWinner || this.players[1].isWinner;
+  }
+
+  private checkWinner(): void {
+    const [p1, p2] = this.players;
+    p1.isWinner = this.victoryChecker.check(p1, p2);
+    p2.isWinner = this.victoryChecker.check(p2, p1);
+  }
+
+  private produceResources(): void {
+    const { player } = this;
+    player.bricks += player.quarries;
+    player.gems += player.magic;
+    player.recruits += player.dungeons;
+  }
+}
