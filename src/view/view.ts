@@ -1,5 +1,12 @@
-import { Publisher, Subscribable, Subscriber, UnsubscribeFn } from '@lib';
-import { CardData, GameChanges, GameData, ParamPair } from '@model';
+import {
+  CardData,
+  GameChanges,
+  GameData,
+  IGameView,
+  ParamPair,
+  PlayerEvent,
+} from '@app';
+import { Publisher, Subscriber, UnsubscribeFn } from '@lib';
 import {
   addCard,
   applyParams,
@@ -33,27 +40,7 @@ import { Player } from './player';
 import './game.css';
 import html from './game.html';
 
-export enum GameViewEventType {
-  CardUsed,
-  GameEnded,
-}
-
-export type CardUsedEvent = {
-  type: GameViewEventType.CardUsed;
-  cardIndex: number;
-  isDiscarded: boolean;
-};
-
-export type GameEndedEvent = {
-  type: GameViewEventType.GameEnded;
-};
-
-export type GameViewEvent = CardUsedEvent | GameEndedEvent;
-
-export class GameView
-  extends HTMLElement
-  implements Subscribable<GameViewEvent>
-{
+export class GameView extends HTMLElement implements IGameView {
   private player!: Player;
 
   private enemy!: Player;
@@ -66,7 +53,7 @@ export class GameView
 
   private queue: CommandQueue = new CommandQueue(this);
 
-  private eventEmitter: Publisher<GameViewEvent> = new Publisher();
+  private eventEmitter: Publisher<PlayerEvent> = new Publisher();
 
   private isLocked: boolean = false;
 
@@ -89,7 +76,7 @@ export class GameView
     this.disableContextMenu();
   }
 
-  subscribe(sub: Subscriber<GameViewEvent>): UnsubscribeFn {
+  subscribe(sub: Subscriber<PlayerEvent>): UnsubscribeFn {
     return this.eventEmitter.subscribe(sub);
   }
 
@@ -247,8 +234,6 @@ export class GameView
     } else {
       alert('You Lost!');
     }
-
-    this.eventEmitter.notify({ type: GameViewEventType.GameEnded });
   }
 
   private appendToDOM(): void {
@@ -324,7 +309,6 @@ export class GameView
     this.lock();
     this.queue.add(useCard(index, isDiscarded));
     this.eventEmitter.notify({
-      type: GameViewEventType.CardUsed,
       cardIndex: index,
       isDiscarded,
     });

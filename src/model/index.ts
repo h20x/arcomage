@@ -1,20 +1,6 @@
-export {
-  BrickCard,
-  Card,
-  CardData,
-  CardType,
-  GemCard,
-  RecruitCard,
-} from './card';
+export * from './card';
 export { getCard } from './cards';
-export { Deck } from './deck';
-export {
-  GameChanges,
-  GameData,
-  GameModel,
-  NewCard,
-  ParamPair,
-  UsedCard,
-} from './game';
-export { Player, PlayerData, PlayerParams } from './player';
-export { VictoryChecker, VictoryConditions } from './victory-checker';
+export * from './deck';
+export * from './game';
+export * from './player';
+export * from './victory-checker';

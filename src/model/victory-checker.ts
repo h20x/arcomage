@@ -1,9 +1,5 @@
+import { VictoryConditions } from '@app';
 import { Player } from './player';
-
-export type VictoryConditions = {
-  tower: number;
-  resource: number;
-};
 
 export class VictoryChecker {
   private victoryConditions: VictoryConditions;

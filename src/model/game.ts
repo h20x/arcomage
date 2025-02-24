@@ -1,38 +1,9 @@
-import { Card, CardData } from './card';
+import { GameChanges, GameData, PlayerParams, VictoryConditions } from '@app';
+import { Card } from './card';
 import { CARDS } from './cards';
 import { Deck } from './deck';
-import { Player, PlayerData, PlayerParams } from './player';
-import { VictoryChecker, VictoryConditions } from './victory-checker';
-
-export type UsedCard = {
-  cardIndex: number;
-  playerIndex: number;
-  data: CardData;
-  isDiscarded: boolean;
-};
-
-export type NewCard = {
-  cardIndex: number;
-  playerIndex: number;
-  data: CardData | null;
-};
-
-export type ParamPair = [Partial<PlayerParams>, Partial<PlayerParams>];
-
-export type GameChanges = {
-  usedCard: UsedCard;
-  params: ParamPair;
-  newCard?: NewCard;
-  nextRound?: {
-    params: ParamPair;
-    newCard?: NewCard;
-  };
-};
-
-export type GameData = {
-  players: [PlayerData, PlayerData];
-  victoryConditions: VictoryConditions;
-};
+import { Player } from './player';
+import { VictoryChecker } from './victory-checker';
 
 export class GameModel {
   static create(
@@ -197,10 +168,6 @@ export class GameModel {
 
   getActivePlayerIndex(): number {
     return this.players.findIndex((p) => p.isActive);
-  }
-
-  isGameEnded(): boolean {
-    return this.players[0].isWinner || this.players[1].isWinner;
   }
 
   private hasWinner(): boolean {

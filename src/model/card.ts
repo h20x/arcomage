@@ -1,18 +1,5 @@
+import { CardData, CardType } from '@app';
 import { Player } from './player';
-
-export enum CardType {
-  Brick = 'Brick',
-  Gem = 'Gem',
-  Recruit = 'Recruit',
-}
-
-export type CardData = {
-  type: CardType;
-  name: string;
-  cost: number;
-  desc: string;
-  isUndiscardable: boolean;
-};
 
 type ApplyFn = (player: Player, enemy: Player) => boolean | void;
 

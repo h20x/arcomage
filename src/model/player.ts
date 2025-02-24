@@ -1,23 +1,5 @@
-import { Card, CardData } from './card';
-
-export type PlayerData = {
-  params: PlayerParams;
-  cards: (CardData | null)[];
-};
-
-export type PlayerParams = {
-  isActive: boolean;
-  isWinner: boolean;
-  isDiscardMode: boolean;
-  quarries: number;
-  magic: number;
-  dungeons: number;
-  bricks: number;
-  gems: number;
-  recruits: number;
-  tower: number;
-  wall: number;
-};
+import { PlayerData, PlayerParams } from '@app';
+import { Card } from './card';
 
 const DEFAULT_PARAMS: PlayerParams = {
   isActive: false,
