@@ -1,11 +1,5 @@
-import {
-  Card,
-  GameModel,
-  getCard,
-  PlayerData,
-  PlayerParams,
-  VictoryConditions,
-} from '@model';
+import { PlayerData, PlayerParams, VictoryConditions } from '@app';
+import { Card, GameModel, getCard } from '@model';
 
 describe('Game', () => {
   function setup(cfg?: {

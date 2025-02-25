@@ -1,4 +1,5 @@
-import { Player, PlayerParams, VictoryChecker } from '@model';
+import { PlayerParams } from '@app';
+import { Player, VictoryChecker } from '@model';
 
 describe('VictoryChecker', () => {
   it('should return true if the player parameters match the victory condition, false otherwise', () => {

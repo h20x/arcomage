@@ -1,4 +1,5 @@
-import { getCard, Player, PlayerParams } from '@model';
+import { PlayerParams } from '@app';
+import { getCard, Player } from '@model';
 
 const defaultParams: PlayerParams = {
   isActive: false,
