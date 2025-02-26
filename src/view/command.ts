@@ -1,4 +1,4 @@
-import { CardData, NewCard, ParamPair } from '@model';
+import { CardData, NewCard, ParamPair } from '@game';
 import { GameView } from './index';
 
 export class CommandQueue {
@@ -87,17 +87,6 @@ export function startNewRound(): Command {
     execute(view) {
       return new Promise((resolve) => {
         view.startNewRound();
-        resolve();
-      });
-    },
-  };
-}
-
-export function cancelLastMove(): Command {
-  return {
-    execute(view) {
-      return new Promise((resolve) => {
-        view.cancelLastMove();
         resolve();
       });
     },

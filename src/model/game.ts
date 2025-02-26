@@ -1,11 +1,17 @@
-import { GameChanges, GameData, PlayerParams, VictoryConditions } from '@app';
+import {
+  GameChanges,
+  GameData,
+  IGameModel,
+  PlayerParams,
+  VictoryConditions,
+} from '@game';
 import { Card } from './card';
 import { CARDS } from './cards';
 import { Deck } from './deck';
 import { Player } from './player';
 import { VictoryChecker } from './victory-checker';
 
-export class GameModel {
+export class GameModel implements IGameModel {
   static create(
     player1: { params?: Partial<PlayerParams>; cards?: Card[] },
     player2: { params?: Partial<PlayerParams>; cards?: Card[] },
@@ -164,10 +170,6 @@ export class GameModel {
       players: [this.players[0].getData(), this.players[1].getData()],
       victoryConditions: this.victoryChecker.getVictoryConditions(),
     };
-  }
-
-  getActivePlayerIndex(): number {
-    return this.players.findIndex((p) => p.isActive);
   }
 
   private hasWinner(): boolean {

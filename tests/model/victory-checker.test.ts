@@ -1,4 +1,4 @@
-import { PlayerParams } from '@app';
+import { PlayerParams } from '@game';
 import { Player, VictoryChecker } from '@model';
 
 describe('VictoryChecker', () => {

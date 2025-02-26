@@ -1,5 +1,5 @@
 import { RandomBot } from '@ai';
-import { PlayerEvent, PlayerParams, UsedCard, VictoryConditions } from '@app';
+import { PlayerEvent, PlayerParams, UsedCard, VictoryConditions } from '@game';
 import { getCard } from '@model';
 
 describe('RandomBot', () => {

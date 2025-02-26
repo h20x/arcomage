@@ -5,7 +5,7 @@ import {
   IGameView,
   ParamPair,
   PlayerEvent,
-} from '@app';
+} from '@game';
 import { Publisher, Subscriber, UnsubscribeFn } from '@lib';
 import {
   addCard,
@@ -37,8 +37,8 @@ import { Tower } from './components/tower/tower';
 import './components/wall/wall';
 import { Wall } from './components/wall/wall';
 import { Player } from './player';
-import './game.css';
-import html from './game.html';
+import './view.css';
+import html from './view.html';
 
 export class GameView extends HTMLElement implements IGameView {
   private player!: Player;
@@ -265,7 +265,7 @@ export class GameView extends HTMLElement implements IGameView {
       wall: this.querySelector('.player-wall') as Wall,
       hand: this.querySelector('.player-hand') as Hand,
     });
-    this.player.subscribe((e) => this.handlePlayerEvent(e));
+    this.player.subscribe((e) => this.handleCard(e));
 
     this.enemy = new Player({
       params: enemy.params,
@@ -278,7 +278,6 @@ export class GameView extends HTMLElement implements IGameView {
       wall: this.querySelector('.enemy-wall') as Wall,
       hand: this.querySelector('.enemy-hand') as Hand,
     });
-    this.enemy.subscribe((e) => this.handlePlayerEvent(e));
   }
 
   private disableContextMenu() {
@@ -291,7 +290,7 @@ export class GameView extends HTMLElement implements IGameView {
     });
   }
 
-  private handlePlayerEvent(e: {
+  private handleCard(e: {
     card: Card;
     index: number;
     isDiscarded: boolean;

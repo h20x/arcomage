@@ -2,7 +2,7 @@ const config = {
   modulePaths: ['<rootDir>'],
   moduleNameMapper: {
     '@ai': '<rootDir>/src/ai',
-    '@app': '<rootDir>/src/app',
+    '@game': '<rootDir>/src/game',
     '@lib': '<rootDir>/src/lib',
     '@model': '<rootDir>/src/model',
   },

@@ -1,4 +1,4 @@
-import { CardData, CardType } from '@app';
+import { CardData, CardType } from '@game';
 import { Player } from './player';
 
 type ApplyFn = (player: Player, enemy: Player) => boolean | void;

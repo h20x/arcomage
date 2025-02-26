@@ -1,4 +1,4 @@
-import { CardData, CardType } from '@model';
+import { CardData, CardType } from '@game';
 import { Publisher, Subscribable, Subscriber, UnsubscribeFn } from '@lib';
 import './card.css';
 import html from './card.html';

@@ -1,4 +1,4 @@
-import { VictoryConditions } from '@app';
+import { VictoryConditions } from '@game';
 import { Player } from './player';
 
 export class VictoryChecker {

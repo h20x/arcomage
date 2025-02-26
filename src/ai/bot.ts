@@ -6,7 +6,7 @@ import {
   IGameBot,
   PlayerEvent,
   PlayerParams,
-} from '@app';
+} from '@game';
 import { Publisher } from '@lib';
 
 export abstract class GameBot

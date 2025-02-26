@@ -11,7 +11,7 @@
     "jsxImportSource": "preact",
     "paths": {
       "@ai": ["src/ai"],
-      "@app": ["src/app"],
+      "@game": ["src/game"],
       "@lib": ["src/lib"],
       "@model": ["src/model"]
     }

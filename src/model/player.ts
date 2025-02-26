@@ -1,4 +1,4 @@
-import { PlayerData, PlayerParams } from '@app';
+import { PlayerData, PlayerParams } from '@game';
 import { Card } from './card';
 
 const DEFAULT_PARAMS: PlayerParams = {

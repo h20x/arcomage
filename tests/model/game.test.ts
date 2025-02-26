@@ -1,4 +1,4 @@
-import { PlayerData, PlayerParams, VictoryConditions } from '@app';
+import { PlayerData, PlayerParams, VictoryConditions } from '@game';
 import { Card, GameModel, getCard } from '@model';
 
 describe('Game', () => {

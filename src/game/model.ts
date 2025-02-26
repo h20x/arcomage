@@ -68,6 +68,5 @@ export type GameData = {
 
 export interface IGameModel {
   getData(): GameData;
-  getActivePlayerIndex(): number;
   useCard(cardIndex: number, isDiscarded: boolean): GameChanges;
 }

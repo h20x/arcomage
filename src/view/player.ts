@@ -1,5 +1,5 @@
+import { CardData, PlayerParams } from '@game';
 import { Publisher } from '@lib';
-import { CardData, PlayerParams } from '@model';
 import { Card } from './components/card/card';
 import { Hand, HandEvent } from './components/hand/hand';
 import { Resource } from './components/resource/resource';
