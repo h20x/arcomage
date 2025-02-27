@@ -16,11 +16,11 @@
 
   width: var(--game-width);
   height: var(--game-height);
-  padding: 0 2rem;
   overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 0 5px #000;
 }
 
 .game__top {
@@ -28,8 +28,10 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  padding-top: 2rem;
+  padding: 2rem 2rem 0;
   flex-shrink: 0;
+  background: #000 url(./assets/castle.webp) 50%;
+  background-size: cover;
 }
 
 .game__bottom {
@@ -38,6 +40,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 0 2rem;
+  background: linear-gradient(
+    180deg,
+    rgba(49, 105, 74, 1) 0%,
+    rgb(0, 16, 8) 15%
+  );
 }
 
 .game__side {

@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  font-family: Montserrat, Arial, Tahoma, Verdana, sans-serif;
+  overflow: hidden;
+  background: #000 url(./assets/texture.webp);
+}
+
+#game {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

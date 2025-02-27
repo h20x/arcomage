@@ -1,4 +1,3 @@
-export * from './bot';
+export * from './game';
 export * from './model';
-export * from './player';
-export * from './view';
+export * from './split-data';
