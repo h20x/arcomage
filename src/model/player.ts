@@ -158,6 +158,10 @@ export class Player {
     return this.cards[index];
   }
 
+  getCards(): readonly Card[] {
+    return this.cards;
+  }
+
   getParams(): PlayerParams {
     return { ...this.params };
   }

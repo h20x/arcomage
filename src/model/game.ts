@@ -78,7 +78,7 @@ export class GameModel implements IGameModel {
     const { player, enemy } = this;
 
     if (!player.hasCard(cardIndex)) {
-      throw new Error(`Card with index ${cardIndex} doesn't exist`);
+      throw new Error(`The card with index ${cardIndex} doesn't exist`);
     }
 
     const card = player.getCard(cardIndex);
@@ -125,7 +125,7 @@ export class GameModel implements IGameModel {
     const { lastUsedCardIndex } = this;
 
     if (player.isActive) {
-      const [newCard] = this.deck.getRandomCards(1);
+      const newCard = this.deck.getRandomCard(player.getCards());
       player.setCard(cardIndex, newCard);
 
       changes.newCard = {
@@ -151,7 +151,7 @@ export class GameModel implements IGameModel {
       };
 
       if (lastUsedCardIndex != null) {
-        const [newCard] = this.deck.getRandomCards(1);
+        const newCard = this.deck.getRandomCard(enemy.getCards());
         enemy.setCard(lastUsedCardIndex, newCard);
 
         changes.nextRound.newCard = {

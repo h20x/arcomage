@@ -72,7 +72,7 @@ describe('Game', () => {
 
     [-1, 2].forEach((i) => {
       expect(() => game.useCard(i)).toThrow(
-        `Card with index ${i} doesn't exist`
+        `The card with index ${i} doesn't exist`
       );
     });
   });

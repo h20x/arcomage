@@ -17,4 +17,15 @@ export class Deck {
 
     return Array.from(idx, (i) => this.cards[i]);
   }
+
+  getRandomCard(cards: readonly Card[]): Card {
+    const cardSet = new Set<Card>(cards);
+    let card;
+
+    do {
+      card = this.cards[rand(this.cards.length)];
+    } while (cardSet.has(card));
+
+    return card;
+  }
 }
