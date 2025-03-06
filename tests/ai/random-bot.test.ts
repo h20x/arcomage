@@ -1,11 +1,11 @@
 import { RandomBot } from '@ai';
-import { PlayerEvent, PlayerParams, UsedCard, VictoryConditions } from '@game';
+import { CardEvent, PlayerParams, UsedCard, VictoryConditions } from '@game';
 import { getCard } from '@model';
 
 describe('RandomBot', () => {
   it('should pick a card if the bot is active', async () => {
     const bot = new RandomBot();
-    const subscriber = jest.fn((e: PlayerEvent) => {});
+    const subscriber = jest.fn((e: CardEvent) => {});
     bot.subscribe(subscriber);
 
     bot.init({

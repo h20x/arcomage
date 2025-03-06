@@ -1,3 +1,4 @@
+import { GameEventType } from '@game';
 import { rand } from '@lib';
 import { GameBot } from './bot';
 
@@ -9,6 +10,7 @@ export class RandomBot extends GameBot {
       const i = rand(usableCards.length);
 
       return {
+        type: GameEventType.Card as const,
         isDiscarded: false,
         cardIndex: usableCards[i][1],
       };
@@ -22,6 +24,7 @@ export class RandomBot extends GameBot {
     }
 
     return {
+      type: GameEventType.Card as const,
       isDiscarded: true,
       cardIndex: index,
     };

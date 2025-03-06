@@ -1,25 +1,26 @@
 import {
   CardData,
+  CardEvent,
   CardType,
   GameChanges,
   GameData,
   IGameBot,
-  PlayerEvent,
   PlayerParams,
 } from '@game';
 import { Publisher } from '@lib';
 
-export abstract class GameBot
-  extends Publisher<PlayerEvent>
-  implements IGameBot
-{
+export abstract class GameBot extends Publisher<CardEvent> implements IGameBot {
   private data!: GameData;
 
-  abstract pickCard(): PlayerEvent;
+  abstract pickCard(): CardEvent;
 
   init(data: GameData): void {
     this.data = data;
     this.tryPickCard();
+  }
+
+  destroy(): void {
+    this.unsubscribeAll();
   }
 
   update(changes: GameChanges): void {

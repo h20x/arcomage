@@ -1,10 +1,11 @@
 import {
   CardData,
+  GameEventType,
   GameChanges,
   GameData,
+  GameEvent,
   IGameView,
   ParamPair,
-  PlayerEvent,
 } from '@game';
 import { Publisher, Subscriber, UnsubscribeFn } from '@lib';
 import {
@@ -28,6 +29,7 @@ import './components/field/field';
 import { Field } from './components/field/field';
 import './components/hand/hand';
 import { Hand } from './components/hand/hand';
+import { Modal } from './components/modal/modal';
 import './components/pile/pile';
 import { Pile } from './components/pile/pile';
 import './components/resource/resource';
@@ -53,7 +55,7 @@ export class GameView extends HTMLElement implements IGameView {
 
   private queue: CommandQueue = new CommandQueue(this);
 
-  private eventEmitter: Publisher<PlayerEvent> = new Publisher();
+  private eventEmitter: Publisher<GameEvent> = new Publisher();
 
   private isLocked: boolean = false;
 
@@ -71,12 +73,18 @@ export class GameView extends HTMLElement implements IGameView {
 
   init(data: GameData): void {
     this.createHTML();
+    this.addEventListeners();
     this.appendToDOM();
     this.createPlayers(data);
     this.disableContextMenu();
   }
 
-  subscribe(sub: Subscriber<PlayerEvent>): UnsubscribeFn {
+  destroy(): void {
+    this.eventEmitter.unsubscribeAll();
+    this.remove();
+  }
+
+  subscribe(sub: Subscriber<GameEvent>): UnsubscribeFn {
     return this.eventEmitter.subscribe(sub);
   }
 
@@ -248,6 +256,37 @@ export class GameView extends HTMLElement implements IGameView {
     this.field = this.querySelector('.game__field')!;
   }
 
+  private addEventListeners(): void {
+    const btnRestart = this.querySelector('.game__restart-btn') as HTMLElement;
+    const btnFullScreen = this.querySelector(
+      '.game__fullscreen-btn'
+    ) as HTMLElement;
+
+    const addListener = (element: HTMLElement, handler: () => void) => {
+      element.addEventListener('pointerup', ({ button }) => {
+        button === 0 && handler();
+      });
+      element.addEventListener('keyup', ({ key }) => {
+        'Enter' === key && handler();
+      });
+    };
+
+    addListener(btnRestart, () => {
+      if (!Modal.isOpen()) {
+        Modal.open({ content: '<b>Restart the game?</b>' }).subscribe((ok) => {
+          ok && this.eventEmitter.notify({ type: GameEventType.Restart });
+        });
+      }
+    });
+
+    addListener(btnFullScreen, () => {
+      document.fullscreenElement
+        ? document.exitFullscreen()
+        : document.documentElement.requestFullscreen();
+      btnFullScreen.classList.toggle('fullscreen', !document.fullscreenElement);
+    });
+  }
+
   private createPlayers(data: GameData) {
     const {
       players: [player, enemy],
@@ -308,6 +347,7 @@ export class GameView extends HTMLElement implements IGameView {
     this.lock();
     this.queue.add(useCard(index, isDiscarded));
     this.eventEmitter.notify({
+      type: GameEventType.Card,
       cardIndex: index,
       isDiscarded,
     });

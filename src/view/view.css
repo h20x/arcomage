@@ -120,3 +120,55 @@
 .game--discard-mode .game__discard-msg {
   display: block;
 }
+
+.game__controls {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: end;
+}
+
+.game__control-buttons {
+  display: flex;
+  justify-content: center;
+  width: 17rem;
+}
+
+.game__control-btn {
+  margin: 0 1rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  width: 3.2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game__control-btn svg {
+  display: block;
+  width: 2.8rem;
+  height: auto;
+}
+
+.game__control-btn path {
+  transition: fill 200ms;
+  fill: #fff;
+}
+
+.game__control-btn:hover path {
+  fill: #eee;
+}
+
+.game__fullscreen-btn:not(.fullscreen) svg:nth-child(2) {
+  display: none;
+}
+
+.game__fullscreen-btn.fullscreen svg:nth-child(1) {
+  display: none;
+}
