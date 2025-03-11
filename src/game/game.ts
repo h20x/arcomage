@@ -1,10 +1,12 @@
 import { Subscribable } from '@lib';
 import { GameChanges, GameData, IGameModel } from './model';
+import { Preset } from './settings';
 import { splitGameChanges, splitGameData } from './split-data';
 
 export enum GameEventType {
   Card,
   Restart,
+  Settings,
 }
 
 export type CardEvent = {
@@ -17,7 +19,12 @@ export type RestartEvent = {
   type: GameEventType.Restart;
 };
 
-export type GameEvent = CardEvent | RestartEvent;
+export type SettingsEvent = {
+  type: GameEventType.Settings;
+  settings: Preset;
+};
+
+export type GameEvent = CardEvent | RestartEvent | SettingsEvent;
 
 export interface IPlayer {
   init(data: GameData): void;

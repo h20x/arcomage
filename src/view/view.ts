@@ -1,11 +1,12 @@
 import {
   CardData,
-  GameEventType,
   GameChanges,
   GameData,
   GameEvent,
+  GameEventType,
   IGameView,
   ParamPair,
+  Preset,
 } from '@game';
 import { Publisher, Subscriber, UnsubscribeFn } from '@lib';
 import {
@@ -34,6 +35,7 @@ import './components/pile/pile';
 import { Pile } from './components/pile/pile';
 import './components/resource/resource';
 import { Resource } from './components/resource/resource';
+import { Settings } from './components/settings/settings';
 import './components/tower/tower';
 import { Tower } from './components/tower/tower';
 import './components/wall/wall';
@@ -62,6 +64,8 @@ export class GameView extends HTMLElement implements IGameView {
   private isNewRound: boolean = false;
 
   private isDiscardMode: boolean = false;
+
+  private settings!: Preset;
 
   private get activePlayer(): Player {
     return this.player.isActive() ? this.player : this.enemy;
@@ -149,6 +153,10 @@ export class GameView extends HTMLElement implements IGameView {
     }
 
     this.queue.add(unlock());
+  }
+
+  setSettings(settings: Preset): void {
+    this.settings = settings;
   }
 
   applyParams([player, enemy]: ParamPair): void {
@@ -261,6 +269,9 @@ export class GameView extends HTMLElement implements IGameView {
     const btnFullScreen = this.querySelector(
       '.game__fullscreen-btn'
     ) as HTMLElement;
+    const btnSettings = this.querySelector(
+      '.game__settings-btn'
+    ) as HTMLElement;
 
     const addListener = (element: HTMLElement, handler: () => void) => {
       element.addEventListener('pointerup', ({ button }) => {
@@ -287,6 +298,25 @@ export class GameView extends HTMLElement implements IGameView {
         ? document.exitFullscreen()
         : document.documentElement.requestFullscreen();
       btnFullScreen.classList.toggle('fullscreen', !document.fullscreenElement);
+    });
+
+    addListener(btnSettings, () => {
+      if (!Modal.isOpen()) {
+        const settings = new Settings();
+        settings.setValues({ ...this.settings });
+
+        Modal.open({ content: settings, btnSuccessText: 'Apply' }).subscribe(
+          (ok) => {
+            if (ok) {
+              this.settings = settings.getValues();
+              this.eventEmitter.notify({
+                type: GameEventType.Settings,
+                settings: this.settings,
+              });
+            }
+          }
+        );
+      }
     });
   }
 
