@@ -273,7 +273,10 @@ export class GameView extends HTMLElement implements IGameView {
 
     addListener(btnRestart, () => {
       if (!Modal.isOpen()) {
-        Modal.open({ content: '<b>Restart the game?</b>' }).subscribe((ok) => {
+        Modal.open({
+          content:
+            '<b style="display: block; text-align: center; font-size: 2.4rem">Restart the game?</b>',
+        }).subscribe((ok) => {
           ok && this.eventEmitter.notify({ type: GameEventType.Restart });
         });
       }
