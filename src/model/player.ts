@@ -11,7 +11,7 @@ const DEFAULT_PARAMS: PlayerParams = {
   bricks: 0,
   gems: 0,
   recruits: 0,
-  tower: 0,
+  tower: 1,
   wall: 0,
 };
 

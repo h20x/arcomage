@@ -5,38 +5,35 @@ import {
   PlayerParams,
   VictoryConditions,
 } from '@game';
-import { Card } from './card';
-import { CARDS } from './cards';
 import { Deck } from './deck';
 import { Player } from './player';
 import { VictoryChecker } from './victory-checker';
 
 export class GameModel implements IGameModel {
   static create(
-    player1: { params?: Partial<PlayerParams>; cards?: Card[] },
-    player2: { params?: Partial<PlayerParams>; cards?: Card[] },
+    params: Partial<PlayerParams>,
     victoryConditions: VictoryConditions,
     handSize: number = 6
   ): GameModel {
-    const deck = new Deck(CARDS);
+    const deck = new Deck();
     const victoryChecker = new VictoryChecker(victoryConditions);
     const _player1 = new Player(
       {
-        ...player1.params,
+        ...params,
         isActive: true,
         isWinner: false,
         isDiscardMode: false,
       },
-      player1.cards ?? deck.getRandomCards(handSize)
+      deck.getRandomCards(handSize)
     );
     const _player2 = new Player(
       {
-        ...player2.params,
+        ...params,
         isActive: false,
         isWinner: false,
         isDiscardMode: false,
       },
-      player2.cards ?? deck.getRandomCards(handSize)
+      deck.getRandomCards(handSize)
     );
 
     return new GameModel(_player1, _player2, deck, victoryChecker);

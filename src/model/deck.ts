@@ -1,10 +1,11 @@
 import { rand, shuffle } from '@lib';
 import { Card } from './card';
+import { CARDS } from './cards';
 
 export class Deck {
   private cards: Card[];
 
-  constructor(cards: Readonly<Card[]> = []) {
+  constructor(cards: Readonly<Card[]> = CARDS) {
     this.cards = shuffle(cards.slice());
   }
 

@@ -4,11 +4,7 @@ import { getCard } from '@model';
 
 describe('RandomBot', () => {
   it('should pick a card if the bot is active', async () => {
-    const bot = new RandomBot();
-    const subscriber = jest.fn((e: CardEvent) => {});
-    bot.subscribe(subscriber);
-
-    bot.init({
+    const bot = new RandomBot({
       players: [
         {
           params: {
@@ -30,6 +26,9 @@ describe('RandomBot', () => {
       ],
       victoryConditions: {} as VictoryConditions,
     });
+    const subscriber = jest.fn((e: CardEvent) => {});
+    bot.subscribe(subscriber);
+    bot.init();
 
     await Promise.resolve();
     expect(subscriber).not.toHaveBeenCalled();

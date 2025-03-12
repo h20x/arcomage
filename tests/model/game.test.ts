@@ -1,7 +1,37 @@
 import { PlayerData, PlayerParams, VictoryConditions } from '@game';
-import { Card, GameModel, getCard } from '@model';
+import { Card, Deck, GameModel, getCard, Player, VictoryChecker } from '@model';
 
 describe('Game', () => {
+  function createGameModel(
+    player1: { params?: Partial<PlayerParams>; cards?: Card[] },
+    player2: { params?: Partial<PlayerParams>; cards?: Card[] },
+    victoryConditions: VictoryConditions,
+    handSize: number = 6
+  ): GameModel {
+    const deck = new Deck();
+    const victoryChecker = new VictoryChecker(victoryConditions);
+    const _player1 = new Player(
+      {
+        isActive: true,
+        isWinner: false,
+        isDiscardMode: false,
+        ...player1.params,
+      },
+      player1.cards ?? deck.getRandomCards(handSize)
+    );
+    const _player2 = new Player(
+      {
+        isActive: false,
+        isWinner: false,
+        isDiscardMode: false,
+        ...player2.params,
+      },
+      player2.cards ?? deck.getRandomCards(handSize)
+    );
+
+    return new GameModel(_player1, _player2, deck, victoryChecker);
+  }
+
   function setup(cfg?: {
     player1?: { params?: Partial<PlayerParams>; cards?: Card[] };
     player2?: { params?: Partial<PlayerParams>; cards?: Card[] };
@@ -16,7 +46,7 @@ describe('Game', () => {
       player2 = {},
       victoryConditions = { resource: 64, tower: 32 },
     } = cfg ?? {};
-    const game = GameModel.create(player1, player2, victoryConditions);
+    const game = createGameModel(player1, player2, victoryConditions);
 
     return {
       game,

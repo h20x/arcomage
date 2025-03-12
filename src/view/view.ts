@@ -45,6 +45,10 @@ import './view.css';
 import html from './view.html';
 
 export class GameView extends HTMLElement implements IGameView {
+  static create(data: GameData, settings: Preset): GameView {
+    return new GameView(data, settings);
+  }
+
   private player!: Player;
 
   private enemy!: Player;
@@ -65,7 +69,9 @@ export class GameView extends HTMLElement implements IGameView {
 
   private isDiscardMode: boolean = false;
 
-  private settings!: Preset;
+  private gameData: GameData;
+
+  private settings: Preset;
 
   private get activePlayer(): Player {
     return this.player.isActive() ? this.player : this.enemy;
@@ -75,11 +81,17 @@ export class GameView extends HTMLElement implements IGameView {
     return this.player.isActive() ? this.enemy : this.player;
   }
 
-  init(data: GameData): void {
+  constructor(data: GameData, settings: Preset) {
+    super();
+    this.gameData = data;
+    this.settings = settings;
+  }
+
+  init(): void {
     this.createHTML();
     this.addEventListeners();
     this.appendToDOM();
-    this.createPlayers(data);
+    this.createPlayers();
     this.disableContextMenu();
   }
 
@@ -153,10 +165,6 @@ export class GameView extends HTMLElement implements IGameView {
     }
 
     this.queue.add(unlock());
-  }
-
-  setSettings(settings: Preset): void {
-    this.settings = settings;
   }
 
   applyParams([player, enemy]: ParamPair): void {
@@ -320,11 +328,11 @@ export class GameView extends HTMLElement implements IGameView {
     });
   }
 
-  private createPlayers(data: GameData) {
+  private createPlayers() {
     const {
       players: [player, enemy],
       victoryConditions,
-    } = data;
+    } = this.gameData;
 
     this.player = new Player({
       params: player.params,

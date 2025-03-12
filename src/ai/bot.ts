@@ -10,12 +10,16 @@ import {
 import { Publisher } from '@lib';
 
 export abstract class GameBot extends Publisher<CardEvent> implements IGameBot {
-  private data!: GameData;
+  private data: GameData;
+
+  constructor(data: GameData) {
+    super();
+    this.data = data;
+  }
 
   abstract pickCard(): CardEvent;
 
-  init(data: GameData): void {
-    this.data = data;
+  init(): void {
     this.tryPickCard();
   }
 
