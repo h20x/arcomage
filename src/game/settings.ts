@@ -249,16 +249,20 @@ export function forEachPreset(
 }
 
 export function validatePreset(preset: Preset): Preset {
-  preset.towerVictory = clamp(preset.towerVictory, 30, 999);
-  preset.tower = clamp(preset.tower, 5, Math.min(50, preset.towerVictory - 1));
-  preset.wall = clamp(preset.wall, 0, 50);
-  preset.quarries = clamp(preset.quarries, 1, 5);
-  preset.magic = clamp(preset.magic, 1, 5);
-  preset.dungeons = clamp(preset.dungeons, 1, 5);
-  preset.bricks = clamp(preset.bricks, 0, 50);
-  preset.gems = clamp(preset.gems, 0, 50);
-  preset.recruits = clamp(preset.recruits, 0, 50);
-  preset.resourceVictory = clamp(preset.resourceVictory, 100, 999);
+  preset.towerVictory = clamp(preset.towerVictory || 0, 30, 999);
+  preset.tower = clamp(
+    preset.tower || 0,
+    5,
+    Math.min(50, preset.towerVictory - 1)
+  );
+  preset.wall = clamp(preset.wall || 0, 0, 50);
+  preset.quarries = clamp(preset.quarries || 0, 1, 5);
+  preset.magic = clamp(preset.magic || 0, 1, 5);
+  preset.dungeons = clamp(preset.dungeons || 0, 1, 5);
+  preset.bricks = clamp(preset.bricks || 0, 0, 50);
+  preset.gems = clamp(preset.gems || 0, 0, 50);
+  preset.recruits = clamp(preset.recruits || 0, 0, 50);
+  preset.resourceVictory = clamp(preset.resourceVictory || 0, 100, 999);
 
   return preset;
 }

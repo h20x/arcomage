@@ -1,4 +1,4 @@
-import { validatePreset } from '@game';
+import { Preset, validatePreset } from '@game';
 
 describe('validatePreset', () => {
   it('should set min values', () => {
@@ -74,5 +74,20 @@ describe('validatePreset', () => {
     });
 
     expect(preset.tower).toBe(preset.towerVictory - 1);
+  });
+
+  it('should handle undefined values', () => {
+    expect(validatePreset({} as Preset)).toEqual({
+      tower: 5,
+      wall: 0,
+      quarries: 1,
+      magic: 1,
+      dungeons: 1,
+      bricks: 0,
+      gems: 0,
+      recruits: 0,
+      towerVictory: 30,
+      resourceVictory: 100,
+    });
   });
 });
