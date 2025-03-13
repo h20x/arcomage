@@ -21,6 +21,10 @@ export class Pile extends HTMLElement {
   forEachCard(cb: (card: Card) => void): void {
     this.cards.forEach((card) => cb(card));
   }
+
+  size(): number {
+    return this.cards.length;
+  }
 }
 
 customElements.define('am-pile', Pile);

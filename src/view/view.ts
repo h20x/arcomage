@@ -200,6 +200,10 @@ export class GameView extends HTMLElement implements IGameView {
     if (isDiscarded) {
       card.markAsDiscarded();
 
+      if (this.isFullPile()) {
+        this.clearPile();
+      }
+
       return card.moveTo(this.pile);
     }
 
@@ -223,6 +227,10 @@ export class GameView extends HTMLElement implements IGameView {
     }
 
     card.markAsPlayed();
+
+    if (this.isFullPile()) {
+      this.clearPile();
+    }
 
     return card.moveTo(this.pile);
   }
@@ -369,6 +377,10 @@ export class GameView extends HTMLElement implements IGameView {
     this.pile.forEachCard((card) => {
       card.moveTo(this.deck, { fadeOut: true }).then(() => card.remove());
     });
+  }
+
+  private isFullPile(): boolean {
+    return this.pile.size() > 6;
   }
 
   private handleCard(e: {
