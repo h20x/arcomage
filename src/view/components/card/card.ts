@@ -167,7 +167,7 @@ export class Card extends HTMLElement implements Subscribable<CardEvent> {
   }
 
   private addEventListeners() {
-    this.addEventListener('pointerdown', (e) => {
+    this.addEventListener('pointerup', (e) => {
       e.button === 0 && this.eventEmitter.notify({ isDiscarded: false });
       e.button === 2 && this.eventEmitter.notify({ isDiscarded: true });
     });
