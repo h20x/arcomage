@@ -58,6 +58,10 @@ export class Player extends Publisher<HandEvent> {
     return this.hand.getCard(index);
   }
 
+  handSize(): number {
+    return this.hand.size();
+  }
+
   hideCards(): void {
     this.hand.hide();
   }

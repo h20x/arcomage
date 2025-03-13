@@ -93,6 +93,7 @@ export class GameView extends HTMLElement implements IGameView {
     this.appendToDOM();
     this.createPlayers();
     this.disableContextMenu();
+    this.animateLastCard();
   }
 
   destroy(): void {
@@ -205,8 +206,8 @@ export class GameView extends HTMLElement implements IGameView {
     return card.moveTo(this.field);
   }
 
-  addCard(data: CardData | null, index: number): Promise<void> {
-    const card = new Card(data);
+  addCard(data: Card | CardData | null, index: number): Promise<void> {
+    const card = data instanceof Card ? data : new Card(data);
     this.deck.addCard(card);
 
     return card.moveTo({
@@ -392,6 +393,19 @@ export class GameView extends HTMLElement implements IGameView {
       cardIndex: index,
       isDiscarded,
     });
+  }
+
+  private animateLastCard() {
+    const index = this.activePlayer.handSize() - 1;
+    const lastCard = this.activePlayer.getCard(index)!;
+    lastCard.remove();
+    this.lock();
+    this.queue.add({
+      execute(view) {
+        return view.addCard(lastCard, index);
+      },
+    });
+    this.queue.add(unlock());
   }
 }
 

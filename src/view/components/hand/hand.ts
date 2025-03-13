@@ -45,6 +45,10 @@ export class Hand extends HTMLElement implements Subscribable<HandEvent> {
     return this.cards[index];
   }
 
+  size(): number {
+    return this.cards.length;
+  }
+
   forEachCard(cb: (card: Card | null) => void): void {
     this.cards.forEach((card) => cb(card));
   }
