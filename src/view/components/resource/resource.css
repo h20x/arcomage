@@ -1,5 +1,5 @@
 .resource {
-  width: 17rem;
+  width: 17.4rem;
   display: block;
   padding: 0.5rem;
   line-height: 1;
@@ -65,6 +65,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0 0.2rem;
+  gap: 1rem;
 }
 
 .resource__amount {
@@ -74,4 +75,7 @@
 .resource__name {
   font-size: 2rem;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }

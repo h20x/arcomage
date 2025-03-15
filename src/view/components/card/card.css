@@ -11,7 +11,9 @@
   color: #000;
   background: hsl(var(--h), var(--s), calc(var(--l) * 0.92))
     url('../../assets/noise.webp');
-  box-shadow: 0.1rem 0.1rem 0.5rem #000;
+  box-shadow: 0.1rem 0.1rem 0.5rem #000,
+    -0.1rem -0.2rem 0.2rem rgb(0, 0, 0, 0.5) inset,
+    0.1rem 0.1rem 0.2rem rgb(255, 255, 255, 0.5) inset;
   border: 0.2rem solid hsl(var(--h), var(--s), calc(var(--l) * 0.15));
 }
 
