@@ -54,8 +54,8 @@ describe('validatePreset', () => {
       bricks: 50,
       gems: 50,
       recruits: 50,
-      towerVictory: 999,
-      resourceVictory: 999,
+      towerVictory: 1000,
+      resourceVictory: 1000,
     });
   });
 

@@ -249,7 +249,7 @@ export function forEachPreset(
 }
 
 export function validatePreset(preset: Preset): Preset {
-  preset.towerVictory = clamp(preset.towerVictory || 0, 30, 999);
+  preset.towerVictory = clamp(preset.towerVictory || 0, 30, 1000);
   preset.tower = clamp(
     preset.tower || 0,
     5,
@@ -262,7 +262,7 @@ export function validatePreset(preset: Preset): Preset {
   preset.bricks = clamp(preset.bricks || 0, 0, 50);
   preset.gems = clamp(preset.gems || 0, 0, 50);
   preset.recruits = clamp(preset.recruits || 0, 0, 50);
-  preset.resourceVictory = clamp(preset.resourceVictory || 0, 100, 999);
+  preset.resourceVictory = clamp(preset.resourceVictory || 0, 100, 1000);
 
   return preset;
 }
