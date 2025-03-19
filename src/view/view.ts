@@ -1,5 +1,7 @@
+import { AudioPlayer, Sound } from '@audio';
 import {
   CardData,
+  CardType,
   GameChanges,
   GameData,
   GameEvent,
@@ -43,6 +45,12 @@ import { Wall } from './components/wall/wall';
 import { Player } from './player';
 import './view.css';
 import html from './view.html';
+
+const typeToRes = {
+  [CardType.Brick]: 'bricks',
+  [CardType.Gem]: 'gems',
+  [CardType.Recruit]: 'recruits',
+} as const;
 
 export class GameView extends HTMLElement implements IGameView {
   static create(data: GameData, settings: Preset): GameView {
@@ -97,6 +105,7 @@ export class GameView extends HTMLElement implements IGameView {
   }
 
   destroy(): void {
+    this.queue.clear();
     this.eventEmitter.unsubscribeAll();
     this.remove();
   }
@@ -118,10 +127,21 @@ export class GameView extends HTMLElement implements IGameView {
     }
 
     const { params, newCard } = data;
-
-    this.queue.add(applyParams(params));
-
     const [player, enemy] = params;
+    const { cost } = usedCard.data;
+    const res = typeToRes[usedCard.data.type];
+
+    if (isEnemyCard) {
+      this.queue.add(
+        applyParams([player, { ...enemy, [res]: enemy[res]! + cost }], false)
+      );
+      this.queue.add(applyParams([{}, { [res]: enemy[res] }]));
+    } else {
+      this.queue.add(
+        applyParams([{ ...player, [res]: player[res]! + cost }, enemy], false)
+      );
+      this.queue.add(applyParams([{ [res]: player[res] }, {}]));
+    }
 
     if (player.isWinner || enemy.isWinner) {
       this.queue.add(endGame(params));
@@ -168,9 +188,12 @@ export class GameView extends HTMLElement implements IGameView {
     this.queue.add(unlock());
   }
 
-  applyParams([player, enemy]: ParamPair): void {
-    this.player.update(player);
-    this.enemy.update(enemy);
+  applyParams(
+    [playerParams, enemyParams]: ParamPair,
+    silent: boolean = true
+  ): void {
+    this.player.update(playerParams, silent);
+    this.enemy.update(enemyParams, silent);
   }
 
   useCard(
@@ -197,6 +220,8 @@ export class GameView extends HTMLElement implements IGameView {
       this.clearPile();
     }
 
+    AudioPlayer.play(Sound.Card);
+
     if (isDiscarded) {
       card.markAsDiscarded();
 
@@ -213,6 +238,7 @@ export class GameView extends HTMLElement implements IGameView {
   addCard(data: Card | CardData | null, index: number): Promise<void> {
     const card = data instanceof Card ? data : new Card(data);
     this.deck.addCard(card);
+    AudioPlayer.play(Sound.Card);
 
     return card.moveTo({
       addCard: () => this.activePlayer.addCard(card, index),

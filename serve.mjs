@@ -19,6 +19,10 @@ import { copy } from 'esbuild-plugin-copy';
             from: ['./src/app/app.html'],
             to: ['./dist/index.html'],
           },
+          {
+            from: ['./src/audio/sounds.mp3'],
+            to: ['./dist/assets'],
+          },
         ],
         resolveFrom: 'cwd',
         watch: true,

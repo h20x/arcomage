@@ -70,17 +70,17 @@ export class Player extends Publisher<HandEvent> {
     this.hand.show();
   }
 
-  update(params: Partial<PlayerParams>): void {
-    Object.assign(this.params, params);
+  update(params: Partial<PlayerParams>, silent: boolean): void {
+    this.assignParams(params);
     const { bricks, gems, recruits, tower, wall, params: _params } = this;
-    bricks.setAmount(_params.bricks);
-    bricks.setProd(_params.quarries);
-    gems.setAmount(_params.gems);
-    gems.setProd(_params.magic);
-    recruits.setAmount(_params.recruits);
-    recruits.setProd(_params.dungeons);
-    tower.setHeight(_params.tower);
-    wall.setHeight(_params.wall);
+    bricks.setAmount(_params.bricks, silent);
+    bricks.setProd(_params.quarries, silent);
+    gems.setAmount(_params.gems, silent);
+    gems.setProd(_params.magic, silent);
+    recruits.setAmount(_params.recruits, silent);
+    recruits.setProd(_params.dungeons, silent);
+    tower.setHeight(_params.tower, silent);
+    wall.setHeight(_params.wall, silent);
     this.checkCards();
   }
 
@@ -103,5 +103,13 @@ export class Player extends Publisher<HandEvent> {
 
   private checkCards(): void {
     this.hand.forEachCard((card) => card?.checkCost(this.params));
+  }
+
+  private assignParams(params: Partial<PlayerParams>): void {
+    for (let [key, value] of Object.entries(params)) {
+      if (!Number.isNaN(value) && value != null) {
+        (this.params as any)[key] = value;
+      }
+    }
   }
 }

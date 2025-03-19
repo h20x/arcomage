@@ -1,3 +1,4 @@
+import { AudioPlayer, Sound } from '@audio';
 import './wall.css';
 import html from './wall.html';
 
@@ -22,11 +23,20 @@ export class Wall extends HTMLElement {
     this.setHeight(val);
   }
 
-  setHeight(val: number): void {
+  setHeight(val: number, silent: boolean = true): void {
     const fr = Math.min(1, val / this.maxHeight);
+    !silent && this.playSound(val - this.height);
     this.height = val;
     this.bodyElem.style.setProperty('--fr', String(fr));
     this.baseElem.textContent = String(val);
+  }
+
+  private playSound(diff: number): void {
+    if (diff > 0) {
+      AudioPlayer.play(Sound.WallInc);
+    } else if (diff < 0) {
+      AudioPlayer.play(Sound.Damage);
+    }
   }
 }
 

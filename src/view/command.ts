@@ -27,6 +27,10 @@ export class CommandQueue {
 
     this.isExecuting = false;
   }
+
+  clear(): void {
+    this.commands.length = 0;
+  }
 }
 
 export interface Command {
@@ -71,11 +75,11 @@ export function wait(time: number): Command {
   };
 }
 
-export function applyParams(params: ParamPair): Command {
+export function applyParams(params: ParamPair, silent?: boolean): Command {
   return {
     execute(view) {
       return new Promise((resolve) => {
-        view.applyParams(params);
+        view.applyParams(params, silent);
         resolve();
       });
     },

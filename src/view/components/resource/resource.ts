@@ -1,3 +1,4 @@
+import { AudioPlayer, Sound } from '@audio';
 import './resource.css';
 import html from './resource.html';
 
@@ -19,12 +20,14 @@ export class Resource extends HTMLElement {
     this.setAmount(amount);
   }
 
-  setAmount(val: number): void {
+  setAmount(val: number, silent: boolean = true): void {
+    !silent && this.playResSound(val - this.amount);
     this.amount = val;
     this.amountElem.textContent = String(val);
   }
 
-  setProd(val: number): void {
+  setProd(val: number, silent: boolean = true): void {
+    !silent && this.playProdSound(val - this.prod);
     this.prod = val;
     this.prodElem.textContent = String(val);
   }
@@ -37,6 +40,22 @@ export class Resource extends HTMLElement {
     const type = this.getAttribute('type');
     const nameElem = this.querySelector('.resource__name')!;
     nameElem.textContent = `${type}s`;
+  }
+
+  private playResSound(diff: number): void {
+    if (diff > 0) {
+      AudioPlayer.play(Sound.ResInc);
+    } else if (diff < 0) {
+      AudioPlayer.play(Sound.ResDec);
+    }
+  }
+
+  private playProdSound(diff: number): void {
+    if (diff > 0) {
+      AudioPlayer.play(Sound.ProdInc);
+    } else if (diff < 0) {
+      AudioPlayer.play(Sound.ProdDec);
+    }
   }
 }
 
