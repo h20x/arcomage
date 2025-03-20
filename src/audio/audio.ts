@@ -33,9 +33,15 @@ export class AudioPlayer {
     AudioPlayer.instance().play(sound);
   }
 
+  static mute(val?: boolean): void {
+    AudioPlayer.instance().mute(val);
+  }
+
   private audioCtx?: AudioContext;
 
   private audioBuffer?: AudioBuffer | null;
+
+  private gainNode?: GainNode;
 
   private soundsToPlay: Set<Sound> = new Set();
 
@@ -48,6 +54,8 @@ export class AudioPlayer {
     } else if ((window as any).webkitAudioContext) {
       this.audioCtx = new (window as any).webkitAudioContext();
     }
+
+    this.gainNode = this.audioCtx?.createGain();
   }
 
   private play(sound: Sound): void {
@@ -61,8 +69,9 @@ export class AudioPlayer {
       this.loadAudioFile().then((buffer) => {
         if (buffer) {
           this.audioBuffer = buffer;
+          this.gainNode!.connect(this.audioCtx!.destination);
         } else {
-          this.audioCtx = undefined;
+          this.audioCtx = this.gainNode = undefined;
         }
       });
     }
@@ -78,14 +87,18 @@ export class AudioPlayer {
   }
 
   private playSound(sound: Sound): void {
-    if (!this.audioCtx || !this.audioBuffer) {
+    if (!this.audioCtx || !this.audioBuffer || !this.gainNode) {
       return;
     }
 
     const source = this.audioCtx.createBufferSource();
     source.buffer = this.audioBuffer;
-    source.connect(this.audioCtx.destination);
+    source.connect(this.gainNode);
     source.start(0, this.sprite[sound][0], this.sprite[sound][1]);
+  }
+
+  private mute(val: boolean = true): void {
+    this.gainNode?.gain.setValueAtTime(Number(!val), 0);
   }
 
   private async loadAudioFile(): Promise<AudioBuffer | null> {

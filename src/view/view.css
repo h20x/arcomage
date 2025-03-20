@@ -134,12 +134,11 @@
 
 .game__control-buttons {
   display: flex;
-  justify-content: center;
   width: 17rem;
+  gap: 2rem;
 }
 
 .game__control-btn {
-  margin: 0 1rem;
   background: none;
   border: 0;
   padding: 0;
@@ -165,10 +164,10 @@
   fill: #eee;
 }
 
-.game__fullscreen-btn:not(.fullscreen) svg:nth-child(2) {
+.game__control-btn:not(.active) svg:nth-child(2) {
   display: none;
 }
 
-.game__fullscreen-btn.fullscreen svg:nth-child(1) {
+.game__control-btn.active svg:nth-child(1) {
   display: none;
 }

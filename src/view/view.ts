@@ -8,7 +8,7 @@ import {
   GameEventType,
   IGameView,
   ParamPair,
-  Preset,
+  Settings,
 } from '@game';
 import { Publisher, Subscriber, UnsubscribeFn } from '@lib';
 import {
@@ -37,7 +37,7 @@ import './components/pile/pile';
 import { Pile } from './components/pile/pile';
 import './components/resource/resource';
 import { Resource } from './components/resource/resource';
-import { Settings } from './components/settings/settings';
+import { SettingsComponent } from './components/settings/settings';
 import './components/tower/tower';
 import { Tower } from './components/tower/tower';
 import './components/wall/wall';
@@ -53,7 +53,7 @@ const typeToRes = {
 } as const;
 
 export class GameView extends HTMLElement implements IGameView {
-  static create(data: GameData, settings: Preset): GameView {
+  static create(data: GameData, settings: Settings): GameView {
     return new GameView(data, settings);
   }
 
@@ -77,10 +77,6 @@ export class GameView extends HTMLElement implements IGameView {
 
   private isDiscardMode: boolean = false;
 
-  private gameData: GameData;
-
-  private settings: Preset;
-
   private get activePlayer(): Player {
     return this.player.isActive() ? this.player : this.enemy;
   }
@@ -89,13 +85,12 @@ export class GameView extends HTMLElement implements IGameView {
     return this.player.isActive() ? this.enemy : this.player;
   }
 
-  constructor(data: GameData, settings: Preset) {
+  constructor(private gameData: GameData, private settings: Settings) {
     super();
-    this.gameData = data;
-    this.settings = settings;
   }
 
   init(): void {
+    AudioPlayer.mute(this.settings.isMuted);
     this.createHTML();
     this.addEventListeners();
     this.appendToDOM();
@@ -315,6 +310,7 @@ export class GameView extends HTMLElement implements IGameView {
     const btnSettings = this.querySelector(
       '.game__settings-btn'
     ) as HTMLElement;
+    const btnMute = this.querySelector('.game__mute-btn') as HTMLElement;
 
     const addListener = (element: HTMLElement, handler: () => void) => {
       element.addEventListener('pointerup', ({ button }) => {
@@ -340,22 +336,37 @@ export class GameView extends HTMLElement implements IGameView {
       document.fullscreenElement
         ? document.exitFullscreen()
         : document.documentElement.requestFullscreen();
-      btnFullScreen.classList.toggle('fullscreen', !document.fullscreenElement);
+      btnFullScreen.classList.toggle('active', !document.fullscreenElement);
+    });
+
+    let { isMuted } = this.settings;
+    btnMute.classList.toggle('active', isMuted);
+
+    addListener(btnMute, () => {
+      isMuted = !isMuted;
+      AudioPlayer.mute(isMuted);
+      btnMute.classList.toggle('active', isMuted);
+      this.settings.isMuted = isMuted;
+      this.eventEmitter.notify({
+        type: GameEventType.Settings,
+        settings: this.settings,
+      });
     });
 
     addListener(btnSettings, () => {
       if (!Modal.isOpen()) {
-        const settings = new Settings();
-        settings.setValues({ ...this.settings });
+        const settingsCmp = new SettingsComponent();
+        settingsCmp.setValues({ ...this.settings.preset });
 
-        Modal.open({ content: settings, btnSuccessText: 'Apply' }).subscribe(
+        Modal.open({ content: settingsCmp, btnSuccessText: 'Apply' }).subscribe(
           (ok) => {
             if (ok) {
-              this.settings = settings.getValues();
+              this.settings.preset = settingsCmp.getValues();
               this.eventEmitter.notify({
                 type: GameEventType.Settings,
                 settings: this.settings,
               });
+              this.eventEmitter.notify({ type: GameEventType.Restart });
             }
           }
         );

@@ -6,7 +6,7 @@ import {
   PlayerParams,
   VictoryConditions,
 } from './model';
-import { Preset, validatePreset } from './settings';
+import { Settings, validatePreset } from './settings';
 import { splitGameChanges, splitGameData } from './split-data';
 
 export enum GameEventType {
@@ -27,7 +27,7 @@ export type RestartEvent = {
 
 export type SettingsEvent = {
   type: GameEventType.Settings;
-  settings: Preset;
+  settings: Settings;
 };
 
 export type GameEvent = CardEvent | RestartEvent | SettingsEvent;
@@ -50,7 +50,7 @@ export interface IModelFactory {
 }
 
 export interface IViewFactory {
-  create(data: GameData, settings: Preset): IGameView;
+  create(data: GameData, settings: Settings): IGameView;
 }
 
 export interface IBotFactory {
@@ -58,8 +58,8 @@ export interface IBotFactory {
 }
 
 export interface ISettingsStorage {
-  get(): Preset;
-  set(settings: Preset): void;
+  get(): Settings;
+  set(settings: Settings): void;
 }
 
 export class Game {
@@ -79,21 +79,23 @@ export class Game {
   start(): void {
     this.destroy();
 
-    const settings = validatePreset(this.settingsStorage.get());
+    const settings = this.settingsStorage.get();
+    const { preset } = settings;
+    validatePreset(preset);
     this.model = this.modelFactory.create(
       {
-        tower: settings.tower,
-        wall: settings.wall,
-        quarries: settings.quarries,
-        magic: settings.magic,
-        dungeons: settings.dungeons,
-        bricks: settings.bricks,
-        gems: settings.gems,
-        recruits: settings.recruits,
+        tower: preset.tower,
+        wall: preset.wall,
+        quarries: preset.quarries,
+        magic: preset.magic,
+        dungeons: preset.dungeons,
+        bricks: preset.bricks,
+        gems: preset.gems,
+        recruits: preset.recruits,
       },
       {
-        resource: settings.resourceVictory,
-        tower: settings.towerVictory,
+        resource: preset.resourceVictory,
+        tower: preset.towerVictory,
       }
     );
     const [viewData, botData] = splitGameData(this.model.getData());
@@ -105,7 +107,6 @@ export class Game {
         this.start();
       } else if (GameEventType.Settings === e.type) {
         this.settingsStorage.set(e.settings);
-        this.start();
       } else if (GameEventType.Card === e.type) {
         this.handleCard(e);
       }

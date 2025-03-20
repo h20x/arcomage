@@ -8,7 +8,7 @@ import {
 import './settings.css';
 import html from './settings.html';
 
-export class Settings extends HTMLElement {
+export class SettingsComponent extends HTMLElement {
   private preset!: Preset;
 
   private presets!: HTMLSelectElement;
@@ -141,4 +141,4 @@ export class Settings extends HTMLElement {
   }
 }
 
-customElements.define('am-settings', Settings);
+customElements.define('am-settings', SettingsComponent);

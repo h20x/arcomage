@@ -1,5 +1,5 @@
 import { GameBotFactory } from '@ai';
-import { Game, getPreset, ISettingsStorage, Preset } from '@game';
+import { Game, getPreset, ISettingsStorage, Settings } from '@game';
 import { GameModel } from '@model';
 import { GameView } from '@view';
 import './app.css';
@@ -21,23 +21,30 @@ handleResize();
 window.addEventListener('resize', handleResize);
 
 class SettingsStorage implements ISettingsStorage {
-  private settings: Preset | null = null;
+  private settings?: Settings;
 
-  get(): Preset {
+  get(): Settings {
     if (!this.settings) {
       try {
         this.settings = JSON.parse(localStorage.getItem('settings') || '');
       } catch (err) {
-        this.settings = getPreset('Default')!;
+        this.settings = {
+          isMuted: false,
+          preset: getPreset('Default')!,
+        };
       }
     }
 
-    return { ...this.settings! };
+    return this.copy(this.settings!);
   }
 
-  set(settings: Preset): void {
-    this.settings = { ...settings };
+  set(settings: Settings): void {
+    this.settings = this.copy(settings);
     localStorage.setItem('settings', JSON.stringify(settings));
+  }
+
+  private copy(settings: Settings): Settings {
+    return { ...settings, preset: { ...settings.preset } };
   }
 }
 

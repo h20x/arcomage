@@ -1,5 +1,10 @@
 import { clamp } from '@lib';
 
+export type Settings = {
+  isMuted: boolean;
+  preset: Preset;
+};
+
 export type Preset = {
   tower: number;
   wall: number;
