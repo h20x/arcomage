@@ -336,7 +336,6 @@ export class GameView extends HTMLElement implements IGameView {
       document.fullscreenElement
         ? document.exitFullscreen()
         : document.documentElement.requestFullscreen();
-      btnFullScreen.classList.toggle('active', !document.fullscreenElement);
     });
 
     let { isMuted } = this.settings;
