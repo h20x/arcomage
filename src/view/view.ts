@@ -281,13 +281,22 @@ export class GameView extends HTMLElement implements IGameView {
   }
 
   endGame([player, enemy]: ParamPair): void {
+    let content, cssClass;
+
     if (player.isWinner && enemy.isWinner) {
-      alert('Draw!');
+      content = 'Draw';
+      cssClass = 'draw-modal';
     } else if (player.isWinner) {
-      alert('You Won!');
+      content = 'You Won';
+      cssClass = 'victory-modal';
     } else {
-      alert('You Lost!');
+      content = 'You Lost';
+      cssClass = 'defeat-modal';
     }
+
+    Modal.open({ content, cssClass, hideActions: true }).subscribe(() =>
+      this.eventEmitter.notify({ type: GameEventType.Restart })
+    );
   }
 
   private appendToDOM(): void {

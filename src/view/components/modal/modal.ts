@@ -6,6 +6,7 @@ type ModalConfig = {
   content: string | HTMLElement;
   btnSuccessText?: string;
   hideActions?: boolean;
+  cssClass?: string;
 };
 
 type AnimOptions = {
@@ -70,7 +71,12 @@ export class Modal extends HTMLElement {
   }
 
   private createHTML(cfg: ModalConfig): void {
-    const { content, btnSuccessText = 'OK', hideActions = false } = cfg;
+    const {
+      content,
+      cssClass,
+      btnSuccessText = 'OK',
+      hideActions = false,
+    } = cfg;
 
     this.classList.add('modal');
     this.innerHTML = html;
@@ -88,6 +94,10 @@ export class Modal extends HTMLElement {
       this.querySelector('.modal__actions')!.remove();
     } else {
       this.querySelector('.modal__success')!.textContent = btnSuccessText;
+    }
+
+    if (cssClass) {
+      this.classList.add(cssClass);
     }
   }
 

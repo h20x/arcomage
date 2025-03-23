@@ -171,3 +171,21 @@
 .game__control-btn.active svg:nth-child(1) {
   display: none;
 }
+
+:is(.defeat-modal, .victory-modal, .draw-modal) .modal__content {
+  padding: 5rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 5rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 1.2rem;
+}
+
+.victory-modal .modal__body {
+  color: #e7c500;
+}
+
+.defeat-modal .modal__body {
+  color: #d52020;
+}
