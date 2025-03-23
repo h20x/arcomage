@@ -37,7 +37,7 @@
   font-size: 2rem;
   font-weight: 700;
   color: #eee;
-  background: #000;
-  border: 0.2rem solid #ddd;
-  border-radius: 0.2rem;
+  background: #111;
+  border: 2px solid #ddd;
+  border-radius: 2px;
 }

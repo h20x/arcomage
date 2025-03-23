@@ -27,7 +27,7 @@
 
 .game__settings :is(input, select) {
   padding: 0.4rem;
-  border-radius: 0.2rem;
+  border-radius: 2px;
   font-size: 1.6rem;
   font-family: inherit;
 }

@@ -16,38 +16,37 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .modal__container {
   position: relative;
-  min-width: 400px;
-  top: 34%;
+  min-width: 40rem;
+  top: 50%;
   transform: translateY(-50%);
 }
 
 .modal__body {
-  background: rgba(0, 0, 0, 1);
-  background-clip: content-box;
-  padding: 0.2rem;
-  border: 0.2rem solid #000;
-  border-radius: 0.2rem;
+  background: #111;
+  border: 2px solid currentColor;
+  border-radius: 2px;
   color: #eee;
+  box-shadow: 0.2rem 0.2rem 0.5rem #000;
 }
 
 .modal__content {
-  padding: 2rem;
+  padding: 3rem;
 }
 
 .modal__actions {
-  margin-top: -1rem;
-  padding: 2rem;
+  margin-top: -2rem;
+  padding: 3rem;
   display: flex;
   justify-content: center;
 }
 
 .modal__btn {
-  border-radius: 0.2rem;
+  border-radius: 2px;
   padding: 1rem;
   font-size: 1.6rem;
   font-family: inherit;
