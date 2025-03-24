@@ -1,13 +1,8 @@
-export enum CardType {
-  Brick = 'Brick',
-  Gem = 'Gem',
-  Recruit = 'Recruit',
-}
+export type CardCost = [number, 'bricks' | 'gems' | 'recruits'];
 
 export type CardData = {
-  type: CardType;
   name: string;
-  cost: number;
+  cost: CardCost;
   desc: string;
   isUndiscardable: boolean;
 };

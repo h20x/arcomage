@@ -1,4 +1,4 @@
-import { CardType, GameData, splitGameChanges, splitGameData } from '@game';
+import { CardCost, GameData, splitGameChanges, splitGameData } from '@game';
 
 describe('split data', () => {
   it('splitGameData', () => {
@@ -18,16 +18,14 @@ describe('split data', () => {
     const player1Cards = [
       {
         name: 'a',
-        cost: 0,
+        cost: [0, 'gems'] as CardCost,
         desc: '',
-        type: CardType.Gem,
         isUndiscardable: false,
       },
       {
         name: 'b',
-        cost: 0,
+        cost: [0, 'gems'] as CardCost,
         desc: '',
-        type: CardType.Gem,
         isUndiscardable: false,
       },
     ];
@@ -47,16 +45,14 @@ describe('split data', () => {
     const player2Cards = [
       {
         name: 'c',
-        cost: 0,
+        cost: [0, 'bricks'] as CardCost,
         desc: '',
-        type: CardType.Brick,
         isUndiscardable: false,
       },
       {
         name: 'd',
-        cost: 0,
+        cost: [0, 'bricks'] as CardCost,
         desc: '',
-        type: CardType.Brick,
         isUndiscardable: false,
       },
     ];
@@ -93,9 +89,8 @@ describe('split data', () => {
       playerIndex: 0,
       data: {
         name: 'a',
-        cost: 0,
+        cost: [0, 'gems'] as CardCost,
         desc: '',
-        type: CardType.Gem,
         isUndiscardable: false,
       },
       isDiscarded: false,
@@ -105,9 +100,8 @@ describe('split data', () => {
       playerIndex: 0,
       data: {
         name: 'b',
-        cost: 0,
+        cost: [0, 'bricks'] as CardCost,
         desc: '',
-        type: CardType.Brick,
         isUndiscardable: false,
       },
     };
@@ -118,9 +112,8 @@ describe('split data', () => {
       playerIndex: 0,
       data: {
         name: 'c',
-        cost: 0,
+        cost: [0, 'recruits'] as CardCost,
         desc: '',
-        type: CardType.Recruit,
         isUndiscardable: false,
       },
     };

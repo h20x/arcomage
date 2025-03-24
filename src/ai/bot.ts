@@ -1,7 +1,6 @@
 import {
   CardData,
   CardEvent,
-  CardType,
   GameChanges,
   GameData,
   IGameBot,
@@ -76,15 +75,6 @@ export abstract class GameBot extends Publisher<CardEvent> implements IGameBot {
   }
 
   private canUse(card: CardData): boolean {
-    switch (card.type) {
-      case CardType.Brick:
-        return this.params().bricks >= card.cost;
-
-      case CardType.Gem:
-        return this.params().gems >= card.cost;
-
-      case CardType.Recruit:
-        return this.params().recruits >= card.cost;
-    }
+    return this.params()[card.cost[1]] >= card.cost[0];
   }
 }

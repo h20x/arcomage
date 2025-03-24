@@ -1,40 +1,38 @@
-import { CardData, CardType } from '@game';
+import { CardCost, CardData } from '@game';
 import { Player } from './player';
 
 type ApplyFn = (player: Player, enemy: Player) => boolean | void;
 
 type CardConfig = {
-  type?: CardType;
   name?: string;
-  cost?: number;
+  cost?: CardCost;
   desc?: string;
   isUndiscardable?: boolean;
   applyFn?: ApplyFn;
 };
 
-export abstract class Card {
-  private _type: CardType;
-
+export class Card {
   private _applyFn: ApplyFn;
 
   private _name: string;
 
-  private _cost: number;
+  private _cost: CardCost;
 
   private _desc: string;
 
   private _isUndiscardable: boolean;
 
-  constructor(cfg: CardConfig) {
-    this._type = cfg.type || CardType.Brick;
+  constructor(cfg: CardConfig = {}) {
     this._name = cfg.name ?? '';
-    this._cost = Math.max(0, cfg.cost ?? 0);
+    this._cost = cfg.cost
+      ? [Math.max(0, cfg.cost[0]), cfg.cost[1]]
+      : [0, 'bricks'];
     this._desc = cfg.desc ?? '';
     this._isUndiscardable = cfg.isUndiscardable ?? false;
     this._applyFn = cfg.applyFn ?? (() => {});
   }
 
-  get cost(): number {
+  get cost(): Readonly<CardCost> {
     return this._cost;
   }
 
@@ -61,9 +59,8 @@ export abstract class Card {
     return true;
   }
 
-  getData(): CardData {
+  getData(): Readonly<CardData> {
     return {
-      type: this._type,
       name: this._name,
       cost: this._cost,
       desc: this._desc,
@@ -71,49 +68,9 @@ export abstract class Card {
     };
   }
 
-  protected abstract subtractCost(player: Player): boolean;
-}
-
-export class BrickCard extends Card {
-  constructor(cfg: CardConfig = {}) {
-    super({ ...cfg, type: CardType.Brick });
-  }
-
-  protected subtractCost(player: Player): boolean {
-    if (player.bricks >= this.cost) {
-      player.bricks -= this.cost;
-
-      return true;
-    }
-
-    return false;
-  }
-}
-
-export class GemCard extends Card {
-  constructor(cfg: CardConfig = {}) {
-    super({ ...cfg, type: CardType.Gem });
-  }
-
-  protected subtractCost(player: Player): boolean {
-    if (player.gems >= this.cost) {
-      player.gems -= this.cost;
-
-      return true;
-    }
-
-    return false;
-  }
-}
-
-export class RecruitCard extends Card {
-  constructor(cfg: CardConfig = {}) {
-    super({ ...cfg, type: CardType.Recruit });
-  }
-
-  protected subtractCost(player: Player): boolean {
-    if (player.recruits >= this.cost) {
-      player.recruits -= this.cost;
+  private subtractCost(player: Player): boolean {
+    if (player[this._cost[1]] >= this._cost[0]) {
+      player[this._cost[1]] -= this._cost[0];
 
       return true;
     }

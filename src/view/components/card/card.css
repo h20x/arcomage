@@ -21,19 +21,19 @@
   outline: 2px solid #eee;
 }
 
-.card--brick {
+.card--bricks {
   --h: var(--rh);
   --s: var(--rs);
   --l: var(--rl);
 }
 
-.card--recruit {
+.card--recruits {
   --h: var(--gh);
   --s: var(--gs);
   --l: var(--gl);
 }
 
-.card--gem {
+.card--gems {
   --h: var(--bh);
   --s: var(--bs);
   --l: var(--bl);

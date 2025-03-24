@@ -1,7 +1,6 @@
 import { AudioPlayer, Sound } from '@audio';
 import {
   CardData,
-  CardType,
   GameChanges,
   GameData,
   GameEvent,
@@ -26,6 +25,8 @@ import {
 } from './command';
 import './components/card/card';
 import { Card } from './components/card/card';
+import './components/controls/controls';
+import { Controls } from './components/controls/controls';
 import './components/deck/deck';
 import { Deck } from './components/deck/deck';
 import './components/field/field';
@@ -45,12 +46,6 @@ import { Wall } from './components/wall/wall';
 import { Player } from './player';
 import './view.css';
 import html from './view.html';
-
-const typeToRes = {
-  [CardType.Brick]: 'bricks',
-  [CardType.Gem]: 'gems',
-  [CardType.Recruit]: 'recruits',
-} as const;
 
 export class GameView extends HTMLElement implements IGameView {
   static create(data: GameData, settings: Settings): GameView {
@@ -92,8 +87,8 @@ export class GameView extends HTMLElement implements IGameView {
   init(): void {
     AudioPlayer.mute(this.settings.isMuted);
     this.createHTML();
-    this.addEventListeners();
     this.appendToDOM();
+    this.initControls();
     this.createPlayers();
     this.disableContextMenu();
     this.animateLastCard();
@@ -123,8 +118,7 @@ export class GameView extends HTMLElement implements IGameView {
 
     const { params, newCard } = data;
     const [player, enemy] = params;
-    const { cost } = usedCard.data;
-    const res = typeToRes[usedCard.data.type];
+    const [cost, res] = usedCard.data.cost;
 
     if (isEnemyCard) {
       this.queue.add(
@@ -287,7 +281,7 @@ export class GameView extends HTMLElement implements IGameView {
       content = 'Draw';
       cssClass = 'draw-modal';
     } else if (player.isWinner) {
-      content = 'You Won';
+      content = 'You Won!';
       cssClass = 'victory-modal';
     } else {
       content = 'You Lost';
@@ -311,57 +305,27 @@ export class GameView extends HTMLElement implements IGameView {
     this.field = this.querySelector('.game__field')!;
   }
 
-  private addEventListeners(): void {
-    const btnRestart = this.querySelector('.game__restart-btn') as HTMLElement;
-    const btnFullScreen = this.querySelector(
-      '.game__fullscreen-btn'
-    ) as HTMLElement;
-    const btnSettings = this.querySelector(
-      '.game__settings-btn'
-    ) as HTMLElement;
-    const btnMute = this.querySelector('.game__mute-btn') as HTMLElement;
+  private initControls(): void {
+    const controls = this.querySelector('.game__controls')! as Controls;
 
-    const addListener = (element: HTMLElement, handler: () => void) => {
-      element.addEventListener('pointerup', ({ button }) => {
-        button === 0 && handler();
-      });
-      element.addEventListener('keyup', ({ key }) => {
-        'Enter' === key && handler();
-      });
-    };
-
-    addListener(btnRestart, () => {
+    controls.onRestart(() => {
       if (!Modal.isOpen()) {
         Modal.open({
-          content:
-            '<b style="display: block; text-align: center; font-size: 2.4rem">Restart the game?</b>',
+          content: 'Restart the game?',
+          cssClass: 'restart-modal',
         }).subscribe((ok) => {
           ok && this.eventEmitter.notify({ type: GameEventType.Restart });
         });
       }
     });
 
-    addListener(btnFullScreen, () => {
+    controls.onFullScreen(() => {
       document.fullscreenElement
         ? document.exitFullscreen()
         : document.documentElement.requestFullscreen();
     });
 
-    let { isMuted } = this.settings;
-    btnMute.classList.toggle('active', isMuted);
-
-    addListener(btnMute, () => {
-      isMuted = !isMuted;
-      AudioPlayer.mute(isMuted);
-      btnMute.classList.toggle('active', isMuted);
-      this.settings.isMuted = isMuted;
-      this.eventEmitter.notify({
-        type: GameEventType.Settings,
-        settings: this.settings,
-      });
-    });
-
-    addListener(btnSettings, () => {
+    controls.onSettings(() => {
       if (!Modal.isOpen()) {
         const settingsCmp = new SettingsComponent();
         settingsCmp.setValues({ ...this.settings.preset });
@@ -379,6 +343,20 @@ export class GameView extends HTMLElement implements IGameView {
           }
         );
       }
+    });
+
+    let { isMuted } = this.settings;
+    controls.checkMuteBtn(isMuted);
+
+    controls.onMute(() => {
+      isMuted = !isMuted;
+      AudioPlayer.mute(isMuted);
+      controls.checkMuteBtn(isMuted);
+      this.settings.isMuted = isMuted;
+      this.eventEmitter.notify({
+        type: GameEventType.Settings,
+        settings: this.settings,
+      });
     });
   }
 
@@ -439,7 +417,7 @@ export class GameView extends HTMLElement implements IGameView {
     switch (true) {
       case this.isLocked:
       case isDiscarded && card.isUndiscardable():
-      case !isDiscarded && card.isUnusable():
+      case !isDiscarded && card.isDisabled():
         return;
     }
 

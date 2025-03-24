@@ -30,8 +30,9 @@ export class Modal extends HTMLElement {
   }
 
   static close(result: boolean = false): void {
-    Modal.activeInstance?.close(result);
+    const instance = Modal.activeInstance;
     Modal.activeInstance = null;
+    instance?.close(result);
   }
 
   static isOpen(): boolean {

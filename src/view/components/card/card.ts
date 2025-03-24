@@ -1,4 +1,4 @@
-import { CardData, CardType } from '@game';
+import { CardCost, CardData } from '@game';
 import { Publisher, Subscribable, Subscriber, UnsubscribeFn } from '@lib';
 import './card.css';
 import html from './card.html';
@@ -7,24 +7,16 @@ type CardEvent = { isDiscarded: boolean };
 
 const ASSETS = `/assets/cards`;
 
-const typeToRes = {
-  [CardType.Brick]: 'bricks',
-  [CardType.Gem]: 'gems',
-  [CardType.Recruit]: 'recruits',
-} as const;
-
 export class Card extends HTMLElement implements Subscribable<CardEvent> {
-  private type: CardType = CardType.Brick;
-
   private name: string = '';
 
   private desc: string = '';
 
-  private cost: number = 0;
+  private _cost: CardCost = [0, 'bricks'];
 
   private isInited: boolean = false;
 
-  private _isUnusable: boolean = false;
+  private _isDisabled: boolean = false;
 
   private _isUndiscardable: boolean = false;
 
@@ -39,11 +31,14 @@ export class Card extends HTMLElement implements Subscribable<CardEvent> {
       return;
     }
 
-    this.type = data.type;
     this.name = data.name;
     this.desc = data.desc;
-    this.cost = data.cost;
+    this._cost = data.cost;
     this._isUndiscardable = data.isUndiscardable;
+  }
+
+  cost(): Readonly<CardCost> {
+    return this._cost;
   }
 
   connectedCallback(): void {
@@ -75,30 +70,21 @@ export class Card extends HTMLElement implements Subscribable<CardEvent> {
     this.classList.add('card--discarded');
   }
 
-  reset(): void {
-    this.classList.remove('card--played', 'card--discarded');
+  setDisabled(val: boolean): void {
+    this._isDisabled = val;
+    this.classList.toggle('card--disabled', val);
   }
 
-  checkCost(resources: {
-    bricks: number;
-    gems: number;
-    recruits: number;
-  }): void {
-    if (this.isUnknown()) {
-      return;
-    }
-
-    const resAmount = resources[typeToRes[this.type]];
-    this._isUnusable = resAmount < this.cost;
-    this.classList.toggle('card--disabled', this._isUnusable);
-  }
-
-  isUnusable(): boolean {
-    return this._isUnusable;
+  isDisabled(): boolean {
+    return this._isDisabled;
   }
 
   isUndiscardable(): boolean {
     return this._isUndiscardable;
+  }
+
+  isUnknown(): boolean {
+    return !this.name;
   }
 
   getCoords(): { x: number; y: number } {
@@ -143,12 +129,8 @@ export class Card extends HTMLElement implements Subscribable<CardEvent> {
     ).finished.then(() => this.classList.remove('card--animated'));
   }
 
-  private isUnknown(): boolean {
-    return !this.name;
-  }
-
   private createHTML(): void {
-    this.classList.add('card', `card--${this.type.toLowerCase()}`);
+    this.classList.add('card', `card--${this._cost[1]}`);
     this.innerHTML = html;
     const nameElem = this.querySelector('.card__name')!;
     const imgElem = this.querySelector('.card__img')!;
@@ -156,7 +138,7 @@ export class Card extends HTMLElement implements Subscribable<CardEvent> {
     const costElem = this.querySelector('.card__cost')!;
     nameElem.textContent = this.name;
     descElem.textContent = this.desc;
-    costElem.textContent = String(this.cost);
+    costElem.textContent = String(this._cost[0]);
     const imgName = this.name
       .replace(/[!']/g, '')
       .replace(/\s+/g, '-')

@@ -1,0 +1,43 @@
+.controls {
+  padding: 2rem;
+}
+
+.controls__container {
+  display: flex;
+  width: 17rem;
+  gap: 2rem;
+}
+
+.controls__btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  width: 3.2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.controls__btn svg {
+  display: block;
+  width: 2.8rem;
+  height: auto;
+}
+
+.controls__btn path {
+  transition: fill 200ms;
+  fill: #fff;
+}
+
+.controls__btn:hover path {
+  fill: #eee;
+}
+
+.controls__btn:not(.active) svg:nth-child(2) {
+  display: none;
+}
+
+.controls__btn.active svg:nth-child(1) {
+  display: none;
+}

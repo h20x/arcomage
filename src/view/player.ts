@@ -50,7 +50,7 @@ export class Player extends Publisher<HandEvent> {
   }
 
   addCard(card: Card, index: number): void {
-    card.checkCost(this.params);
+    this.checkCard(card);
     this.hand.addCard(card, index);
   }
 
@@ -102,7 +102,13 @@ export class Player extends Publisher<HandEvent> {
   }
 
   private checkCards(): void {
-    this.hand.forEachCard((card) => card?.checkCost(this.params));
+    this.hand.forEachCard((card) => this.checkCard(card));
+  }
+
+  private checkCard(card: Card | null): void {
+    if (card && !card.isUnknown()) {
+      card.setDisabled(this.params[card.cost()[1]] < card.cost()[0]);
+    }
   }
 
   private assignParams(params: Partial<PlayerParams>): void {
