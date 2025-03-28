@@ -151,3 +151,14 @@
   font-weight: 700;
   text-align: center;
 }
+
+.particle {
+  position: fixed;
+  z-index: 100;
+  background: #0f0;
+  pointer-events: none;
+}
+
+.particle--dec {
+  background: #f00;
+}

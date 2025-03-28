@@ -1,4 +1,5 @@
 import { AudioPlayer, Sound } from '@audio';
+import { explosion } from 'src/view/explosion';
 import './wall.css';
 import html from './wall.html';
 
@@ -25,16 +26,20 @@ export class Wall extends HTMLElement {
 
   setHeight(val: number, silent: boolean = true): void {
     const fr = Math.min(1, val / this.maxHeight);
-    !silent && this.playSound(val - this.height);
+    !silent && this.emphasize(val - this.height);
     this.height = val;
     this.bodyElem.style.setProperty('--fr', String(fr));
     this.baseElem.textContent = String(val);
   }
 
-  private playSound(diff: number): void {
+  private emphasize(diff: number): void {
+    const { x, y } = this.baseElem.getBoundingClientRect();
+
     if (diff > 0) {
       AudioPlayer.play(Sound.WallInc);
+      explosion(x, y, diff);
     } else if (diff < 0) {
+      explosion(x, y, diff);
       AudioPlayer.play(Sound.Damage);
     }
   }

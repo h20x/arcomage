@@ -1,4 +1,5 @@
 import { AudioPlayer, Sound } from '@audio';
+import { explosion } from 'src/view/explosion';
 import './resource.css';
 import html from './resource.html';
 
@@ -21,13 +22,13 @@ export class Resource extends HTMLElement {
   }
 
   setAmount(val: number, silent: boolean = true): void {
-    !silent && this.playResSound(val - this.amount);
+    !silent && this.emphasizeRes(val - this.amount);
     this.amount = val;
     this.amountElem.textContent = String(val);
   }
 
   setProd(val: number, silent: boolean = true): void {
-    !silent && this.playProdSound(val - this.prod);
+    !silent && this.emphasizeProd(val - this.prod);
     this.prod = val;
     this.prodElem.textContent = String(val);
   }
@@ -42,19 +43,27 @@ export class Resource extends HTMLElement {
     nameElem.textContent = `${type}s`;
   }
 
-  private playResSound(diff: number): void {
+  private emphasizeRes(diff: number): void {
+    const { x, y } = this.amountElem.getBoundingClientRect();
+
     if (diff > 0) {
       AudioPlayer.play(Sound.ResInc);
+      explosion(x, y, diff);
     } else if (diff < 0) {
       AudioPlayer.play(Sound.ResDec);
+      explosion(x, y, diff);
     }
   }
 
-  private playProdSound(diff: number): void {
+  private emphasizeProd(diff: number): void {
+    const { x, y } = this.prodElem.getBoundingClientRect();
+
     if (diff > 0) {
       AudioPlayer.play(Sound.ProdInc);
+      explosion(x, y, diff);
     } else if (diff < 0) {
       AudioPlayer.play(Sound.ProdDec);
+      explosion(x, y, diff);
     }
   }
 }
