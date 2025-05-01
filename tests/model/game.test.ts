@@ -77,22 +77,26 @@ describe('Game', () => {
   });
 
   it("should throw error if the card can't be discarded", () => {
+    const cardName = 'Lodestone';
     const { game } = setup({
-      player1: { cards: [getCard('Lodestone')] },
+      player1: { cards: [getCard(cardName)] },
     });
 
-    expect(() => game.useCard(0, true)).toThrow("This card can't be discarded");
+    expect(() => game.useCard(0, true)).toThrow(
+      `"${cardName}" can't be discarded`
+    );
   });
 
   it("should throw error if the card can't be used", () => {
+    const cardName = "Dragon's Eye";
     const { game } = setup({
       player1: {
         params: { bricks: 0, gems: 0, recruits: 0 },
-        cards: [getCard("Dragon's Eye")],
+        cards: [getCard(cardName)],
       },
     });
 
-    expect(() => game.useCard(0)).toThrow(`You can't use "Dragon's Eye"`);
+    expect(() => game.useCard(0)).toThrow(`"${cardName}" can't be used`);
   });
 
   it("should throw error if the card doesn't exist", () => {
@@ -101,9 +105,7 @@ describe('Game', () => {
     });
 
     [-1, 2].forEach((i) => {
-      expect(() => game.useCard(i)).toThrow(
-        `The card with index ${i} doesn't exist`
-      );
+      expect(() => game.useCard(i)).toThrow(`Invalid card index: ${i}`);
     });
   });
 

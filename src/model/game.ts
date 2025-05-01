@@ -75,14 +75,14 @@ export class GameModel implements IGameModel {
     const { player, enemy } = this;
 
     if (!player.hasCard(cardIndex)) {
-      throw new Error(`The card with index ${cardIndex} doesn't exist`);
+      throw new Error(`Invalid card index: ${cardIndex}`);
     }
 
     const card = player.getCard(cardIndex);
     const isDiscardedCard = player.isDiscardMode || isDiscarded;
 
     if (isDiscardedCard && card.isUndiscardable) {
-      throw new Error("This card can't be discarded");
+      throw new Error(`"${card.name}" can't be discarded`);
     }
 
     const player1Copy = this.players[0].clone();
@@ -97,7 +97,7 @@ export class GameModel implements IGameModel {
       player.isDiscardMode = false;
     } else {
       if (!card.apply(player, enemy)) {
-        throw new Error(`You can't use "${card.name}"`);
+        throw new Error(`"${card.name}" can't be used`);
       }
 
       this.checkWinner();
