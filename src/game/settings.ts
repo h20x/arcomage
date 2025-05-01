@@ -50,22 +50,7 @@ const PRESETS: Map<string, Preset> = new Map([
     },
   ],
   [
-    "Griffin's Rest - Erathia",
-    {
-      tower: 20,
-      wall: 5,
-      quarries: 2,
-      magic: 2,
-      dungeons: 2,
-      bricks: 5,
-      gems: 5,
-      recruits: 5,
-      towerVictory: 50,
-      resourceVictory: 150,
-    },
-  ],
-  [
-    'Emerald Inn - Tularean Forest',
+    "Griffin's Rest - Erathia / Emerald Inn - Tularean Forest",
     {
       tower: 20,
       wall: 5,
@@ -110,22 +95,7 @@ const PRESETS: Map<string, Preset> = new Map([
     },
   ],
   [
-    'The Blessed Brew - Celeste',
-    {
-      tower: 30,
-      wall: 15,
-      quarries: 4,
-      magic: 4,
-      dungeons: 4,
-      bricks: 10,
-      gems: 10,
-      recruits: 10,
-      towerVictory: 100,
-      resourceVictory: 300,
-    },
-  ],
-  [
-    'The Vampyre Lounge - The Pit',
+    'The Blessed Brew - Celeste / The Vampyre Lounge - The Pit',
     {
       tower: 30,
       wall: 15,
@@ -185,22 +155,7 @@ const PRESETS: Map<string, Preset> = new Map([
     },
   ],
   [
-    'The Loyal Mercenary - Tatalia',
-    {
-      tower: 10,
-      wall: 20,
-      quarries: 3,
-      magic: 1,
-      dungeons: 2,
-      bricks: 15,
-      gems: 5,
-      recruits: 10,
-      towerVictory: 125,
-      resourceVictory: 350,
-    },
-  ],
-  [
-    'The Potted Pixie - Avlee',
+    'The Loyal Mercenary - Tatalia / The Potted Pixie - Avlee',
     {
       tower: 10,
       wall: 20,

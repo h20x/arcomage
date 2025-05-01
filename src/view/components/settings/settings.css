@@ -36,6 +36,8 @@
   border: 0;
   background: #eee;
   color: #000;
+  max-width: 30rem;
+  text-overflow: ellipsis;
 }
 
 .game__settings input {
