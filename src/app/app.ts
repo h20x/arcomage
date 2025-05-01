@@ -1,4 +1,4 @@
-import { GameBotFactory } from '@ai';
+import { GreedyBot } from '@ai';
 import { Game, getPreset, ISettingsStorage, Settings } from '@game';
 import { GameModel } from '@model';
 import { GameView } from '@view';
@@ -48,4 +48,4 @@ class SettingsStorage implements ISettingsStorage {
   }
 }
 
-new Game(GameModel, GameView, GameBotFactory, new SettingsStorage()).start();
+new Game(GameModel, GameView, GreedyBot, new SettingsStorage()).start();

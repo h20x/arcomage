@@ -15,7 +15,7 @@ const DEFAULT_PARAMS: PlayerParams = {
   wall: 0,
 };
 
-export class Player {
+export class Player implements PlayerParams {
   static diff(player1: Player, player2: Player): Partial<PlayerParams> {
     const p1 = player1.getParams();
     const p2 = player2.getParams();
@@ -36,21 +36,7 @@ export class Player {
   private params: PlayerParams = {} as PlayerParams;
 
   constructor(params: Partial<PlayerParams> = {}, cards: Card[] = []) {
-    const mergedParams = Object.assign({}, DEFAULT_PARAMS, params);
-    const { isActive, isWinner, isDiscardMode, tower, wall } = mergedParams;
-    const { quarries, magic, dungeons, bricks, gems, recruits } = mergedParams;
-    const { params: _params } = this;
-    _params.isActive = isActive;
-    _params.isWinner = isWinner;
-    _params.isDiscardMode = isDiscardMode;
-    _params.quarries = Math.max(quarries, 1);
-    _params.magic = Math.max(magic, 1);
-    _params.dungeons = Math.max(dungeons, 1);
-    _params.bricks = Math.max(bricks, 0);
-    _params.gems = Math.max(gems, 0);
-    _params.recruits = Math.max(recruits, 0);
-    _params.tower = Math.max(tower, 0);
-    _params.wall = Math.max(wall, 0);
+    this.setParams(Object.assign({}, DEFAULT_PARAMS, params));
     this.cards = cards.slice();
   }
 
@@ -164,6 +150,12 @@ export class Player {
 
   getParams(): PlayerParams {
     return { ...this.params };
+  }
+
+  setParams(params: Partial<PlayerParams>): void {
+    for (const [key, value] of Object.entries(params)) {
+      (this as any)[key] = value;
+    }
   }
 
   getData(): PlayerData {

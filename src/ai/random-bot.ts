@@ -1,12 +1,17 @@
-import { GameEventType } from '@game';
+import { GameData, GameEventType } from '@game';
 import { rand } from '@lib';
+import { Card } from '@model';
 import { GameBot } from './bot';
 
 export class RandomBot extends GameBot {
-  pickCard() {
+  static create(data: GameData): RandomBot {
+    return new RandomBot(data);
+  }
+
+  protected pickCard() {
     const usableCards = this.getUsableCards();
 
-    if (usableCards.length) {
+    if (this.player.isDiscardMode === false && usableCards.length) {
       const i = rand(usableCards.length);
 
       return {
@@ -16,7 +21,7 @@ export class RandomBot extends GameBot {
       };
     }
 
-    const cards = this.cards();
+    const cards = this.player.getCards();
     let index = rand(cards.length);
 
     while (cards[index].isUndiscardable) {
@@ -28,5 +33,12 @@ export class RandomBot extends GameBot {
       isDiscarded: true,
       cardIndex: index,
     };
+  }
+
+  private getUsableCards(): [Card, number][] {
+    return this.player
+      .getCards()
+      .map<[Card, number]>((card, index) => [card, index])
+      .filter(([card]) => this.player[card.cost[1]] >= card.cost[0]);
   }
 }
