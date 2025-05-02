@@ -39,7 +39,10 @@ const SETTINGS = [
 
 const MIN_SIZE = 3;
 
-export function explosion(x: number, y: number, val: number): void {
+export function explosion(
+  { x, y }: { x: number; y: number },
+  val: number
+): void {
   const size = valToSize(val);
   const type = val > 0 ? ParticleType.Inc : ParticleType.Dec;
   const { dist, duration, particles } = SETTINGS[size];

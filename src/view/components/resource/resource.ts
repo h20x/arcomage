@@ -44,26 +44,22 @@ export class Resource extends HTMLElement {
   }
 
   private emphasizeRes(diff: number): void {
-    const { x, y } = this.amountElem.getBoundingClientRect();
-
     if (diff > 0) {
       AudioPlayer.play(Sound.ResInc);
-      explosion(x, y, diff);
+      explosion(this.amountElem.getBoundingClientRect(), diff);
     } else if (diff < 0) {
       AudioPlayer.play(Sound.ResDec);
-      explosion(x, y, diff);
+      explosion(this.amountElem.getBoundingClientRect(), diff);
     }
   }
 
   private emphasizeProd(diff: number): void {
-    const { x, y } = this.prodElem.getBoundingClientRect();
-
     if (diff > 0) {
       AudioPlayer.play(Sound.ProdInc);
-      explosion(x, y, diff);
+      explosion(this.prodElem.getBoundingClientRect(), diff);
     } else if (diff < 0) {
       AudioPlayer.play(Sound.ProdDec);
-      explosion(x, y, diff);
+      explosion(this.prodElem.getBoundingClientRect(), diff);
     }
   }
 }

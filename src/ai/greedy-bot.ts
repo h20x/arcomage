@@ -69,13 +69,13 @@ export class GreedyBot extends GameBot {
 
     return this.player
       .getCards()
-      .map((card, i) => {
+      .map((card, index) => {
         const [player, enemy] = this.applyCard(card);
         const playerVal = this.calcValue(this.getDiff(player, this.player));
         const enemyVal = this.calcValue(this.getDiff(enemy, this.enemy), true);
 
         return {
-          index: i,
+          index,
           isUndiscardable: card.isUndiscardable,
           isUsable: this.isUsableCard(card),
           state: this.getState(player, enemy),

@@ -33,14 +33,12 @@ export class Wall extends HTMLElement {
   }
 
   private emphasize(diff: number): void {
-    const { x, y } = this.baseElem.getBoundingClientRect();
-
     if (diff > 0) {
       AudioPlayer.play(Sound.WallInc);
-      explosion(x, y, diff);
+      explosion(this.baseElem.getBoundingClientRect(), diff);
     } else if (diff < 0) {
-      explosion(x, y, diff);
       AudioPlayer.play(Sound.Damage);
+      explosion(this.baseElem.getBoundingClientRect(), diff);
     }
   }
 }
