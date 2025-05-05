@@ -20,6 +20,10 @@ import { copy } from 'esbuild-plugin-copy';
             to: ['./dist/index.html'],
           },
           {
+            from: ['./src/app/favicon.ico'],
+            to: ['./dist'],
+          },
+          {
             from: ['./src/audio/sounds.mp3'],
             to: ['./dist/assets'],
           },
