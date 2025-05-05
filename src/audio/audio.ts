@@ -49,7 +49,7 @@ export class AudioPlayer {
     private src: string,
     private sprite: Record<Sound, [number, number]>
   ) {
-    if (AudioContext) {
+    if (window.AudioContext) {
       this.audioCtx = new AudioContext();
     } else if ((window as any).webkitAudioContext) {
       this.audioCtx = new (window as any).webkitAudioContext();

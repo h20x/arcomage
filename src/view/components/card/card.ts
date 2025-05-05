@@ -123,7 +123,7 @@ export class Card extends HTMLElement implements Subscribable<CardEvent> {
     return this.animate(
       [
         { transform: `translateX(${-diff.x}px) translateY(${-diff.y}px)` },
-        fadeOut ? { transform: '', opacity: 0 } : { transform: '' },
+        fadeOut ? { transform: 'none', opacity: 0 } : { transform: 'none' },
       ],
       { duration, easing, fill: 'both' }
     ).finished.then(() => this.classList.remove('card--animated'));

@@ -65,10 +65,10 @@ export class Modal extends HTMLElement {
 
   private doAnimate({ duration = 150, easing = 'ease-out' } = {}): void {
     this.animate([{ opacity: 0 }, { opacity: 1 }], { duration, easing });
-    this.body.animate([{ transform: 'translateY(-10px)' }, { transform: '' }], {
-      duration,
-      easing,
-    });
+    this.body.animate(
+      [{ transform: 'translateY(-10px)' }, { transform: 'none' }],
+      { duration, easing }
+    );
   }
 
   private createHTML(cfg: ModalConfig): void {
