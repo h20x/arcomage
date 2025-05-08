@@ -1,7 +1,6 @@
-import { CardCost, CardData } from '@game';
-import { Player } from './player';
+import { CardCost, CardData, PlayerParams } from '@game';
 
-type ApplyFn = (player: Player, enemy: Player) => boolean | void;
+type ApplyFn = (player: PlayerParams, enemy: PlayerParams) => boolean | void;
 
 type CardConfig = {
   name?: string;
@@ -44,7 +43,7 @@ export class Card {
     return this._isUndiscardable;
   }
 
-  apply(player: Player, enemy: Player): boolean {
+  apply(player: PlayerParams, enemy: PlayerParams): boolean {
     if (!this.subtractCost(player)) {
       return false;
     }
@@ -68,7 +67,7 @@ export class Card {
     };
   }
 
-  private subtractCost(player: Player): boolean {
+  private subtractCost(player: PlayerParams): boolean {
     if (player[this._cost[1]] >= this._cost[0]) {
       player[this._cost[1]] -= this._cost[0];
 

@@ -6,23 +6,12 @@ import {
   GameEvent,
   GameEventType,
   IGameView,
+  NewCard,
   ParamPair,
   Settings,
 } from '@game';
 import { Publisher, Subscriber, UnsubscribeFn } from '@lib';
-import {
-  addCard,
-  applyParams,
-  CommandQueue,
-  dropUsedCard,
-  enableDiscardMode,
-  endGame,
-  lock,
-  startNewRound,
-  unlock,
-  useCard,
-  wait,
-} from './command';
+import { Command, CommandQueue } from './command';
 import './components/card/card';
 import { Card } from './components/card/card';
 import './components/controls/controls';
@@ -47,6 +36,115 @@ import { Player } from './player';
 import './view.css';
 import html from './view.html';
 
+function addCard(view: GameView, { data, cardIndex }: NewCard): Command {
+  return {
+    execute() {
+      return view.addCard(data, cardIndex);
+    },
+  };
+}
+
+function useCard(
+  view: GameView,
+  index: number,
+  isDiscarded: boolean,
+  data?: CardData
+): Command {
+  return {
+    execute() {
+      return view.useCard(index, isDiscarded, data);
+    },
+  };
+}
+
+function dropUsedCard(view: GameView): Command {
+  return {
+    execute() {
+      return view.dropUsedCard();
+    },
+  };
+}
+
+function wait(time: number): Command {
+  return {
+    execute() {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(), time);
+      });
+    },
+  };
+}
+
+function applyParams(
+  view: GameView,
+  params: ParamPair,
+  silent?: boolean
+): Command {
+  return {
+    execute() {
+      return new Promise((resolve) => {
+        view.applyParams(params, silent);
+        resolve();
+      });
+    },
+  };
+}
+
+function startNewRound(view: GameView): Command {
+  return {
+    execute() {
+      return new Promise((resolve) => {
+        view.startNewRound();
+        resolve();
+      });
+    },
+  };
+}
+
+function enableDiscardMode(view: GameView): Command {
+  return {
+    execute() {
+      return new Promise((resolve) => {
+        view.enableDiscardMode();
+        resolve();
+      });
+    },
+  };
+}
+
+function lock(view: GameView): Command {
+  return {
+    execute() {
+      return new Promise((resolve) => {
+        view.lock();
+        resolve();
+      });
+    },
+  };
+}
+
+function unlock(view: GameView): Command {
+  return {
+    execute() {
+      return new Promise((resolve) => {
+        view.unlock();
+        resolve();
+      });
+    },
+  };
+}
+
+function endGame(view: GameView, params: ParamPair): Command {
+  return {
+    execute() {
+      return new Promise((resolve) => {
+        view.endGame(params);
+        resolve();
+      });
+    },
+  };
+}
+
 export class GameView extends HTMLElement implements IGameView {
   static create(data: GameData, settings: Settings): GameView {
     return new GameView(data, settings);
@@ -62,7 +160,7 @@ export class GameView extends HTMLElement implements IGameView {
 
   private field!: Field;
 
-  private queue: CommandQueue = new CommandQueue(this);
+  private queue: CommandQueue = new CommandQueue();
 
   private eventEmitter: Publisher<GameEvent> = new Publisher();
 
@@ -105,14 +203,14 @@ export class GameView extends HTMLElement implements IGameView {
   }
 
   update(data: GameChanges): void {
-    this.queue.add(lock());
+    this.queue.add(lock(this));
 
     const { usedCard } = data;
     const isEnemyCard = usedCard.playerIndex === 1;
 
     if (isEnemyCard) {
       this.queue.add(
-        useCard(usedCard.cardIndex, usedCard.isDiscarded, usedCard.data)
+        useCard(this, usedCard.cardIndex, usedCard.isDiscarded, usedCard.data)
       );
     }
 
@@ -122,34 +220,42 @@ export class GameView extends HTMLElement implements IGameView {
 
     if (isEnemyCard) {
       this.queue.add(
-        applyParams([player, { ...enemy, [res]: enemy[res]! + cost }], false)
+        applyParams(
+          this,
+          [player, { ...enemy, [res]: enemy[res]! + cost }],
+          false
+        )
       );
-      this.queue.add(applyParams([{}, { [res]: enemy[res] }]));
+      this.queue.add(applyParams(this, [{}, { [res]: enemy[res] }]));
     } else {
       this.queue.add(
-        applyParams([{ ...player, [res]: player[res]! + cost }, enemy], false)
+        applyParams(
+          this,
+          [{ ...player, [res]: player[res]! + cost }, enemy],
+          false
+        )
       );
-      this.queue.add(applyParams([{ [res]: player[res] }, {}]));
+      this.queue.add(applyParams(this, [{ [res]: player[res] }, {}]));
     }
 
     if (player.isWinner || enemy.isWinner) {
-      this.queue.add(endGame(params));
+      this.queue.add(endGame(this, params));
 
       return;
     }
 
     if (player.isDiscardMode || enemy.isDiscardMode) {
-      this.queue.add(enableDiscardMode());
-      this.queue.add(addCard(newCard!));
-      this.queue.add(dropUsedCard());
+      this.queue.add(enableDiscardMode(this));
+      this.queue.add(addCard(this, newCard!));
+      this.queue.add(dropUsedCard(this));
     } else {
       if (!usedCard.isDiscarded) {
         this.queue.add(wait(200));
-        this.queue.add(dropUsedCard());
+        this.queue.add(dropUsedCard(this));
       }
 
       if (newCard) {
-        this.queue.add(addCard(newCard));
+        this.queue.add(addCard(this, newCard));
       }
     }
 
@@ -158,23 +264,23 @@ export class GameView extends HTMLElement implements IGameView {
     if (nextRound) {
       const { params, newCard } = nextRound;
 
-      this.queue.add(startNewRound());
-      this.queue.add(applyParams(params));
+      this.queue.add(startNewRound(this));
+      this.queue.add(applyParams(this, params));
 
       if (newCard) {
-        this.queue.add(addCard(newCard));
+        this.queue.add(addCard(this, newCard));
       }
 
       const [player, enemy] = params;
 
       if (player.isWinner || enemy.isWinner) {
-        this.queue.add(endGame(params));
+        this.queue.add(endGame(this, params));
 
         return;
       }
     }
 
-    this.queue.add(unlock());
+    this.queue.add(unlock(this));
   }
 
   applyParams(
@@ -422,7 +528,7 @@ export class GameView extends HTMLElement implements IGameView {
     }
 
     this.lock();
-    this.queue.add(useCard(index, isDiscarded));
+    this.queue.add(useCard(this, index, isDiscarded));
     this.eventEmitter.notify({
       type: GameEventType.Card,
       cardIndex: index,
@@ -433,14 +539,15 @@ export class GameView extends HTMLElement implements IGameView {
   private animateLastCard() {
     const index = this.activePlayer.handSize() - 1;
     const lastCard = this.activePlayer.getCard(index)!;
+    const view = this;
     lastCard.remove();
     this.lock();
     this.queue.add({
-      execute(view) {
+      execute() {
         return view.addCard(lastCard, index);
       },
     });
-    this.queue.add(unlock());
+    this.queue.add(unlock(this));
   }
 }
 
